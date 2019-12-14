@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+	
+	 <!-- Anguler Js -->
+	  <script src="angulerjs/socket.io.js"></script>
+     <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appMasters.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="MasterApp" ng-controller="masterController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Target V/S Acievements</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New Target</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="AddTarget">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="target.name" placeholder="Target Name" required autofocus>
+											</div>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Desrciption:</i>
+											</span>
+											<div class="form-line">
+												<textarea class="form-control" ng-model="target.description" placeholder="Description" required></textarea>
+											</div>
+										</div>
+										<div class="col-md-4 col-lg-4 col-sm-4 col-xs-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>From:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="target.startdate" required >
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4 col-lg-4 col-sm-4 col-xs-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>to:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="target.enddate" required >
+											</div>
+										</div>
+										</div>
+										<div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Target Count:</i>
+											</span>
+											<div class="form-line">
+												<input type="number" class="form-control" ng-model="target.targetcount" placeholder="Target Count" required>
+											</div>
+										</div>
+										</div>
+										
+										
+										<div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Amt. If Target Incomplete:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="target.targetincmpltamt" placeholder="Amt. If Target Incomplete" required>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Amt. If Target Complete:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="target.targetcompletedamt" placeholder="Amt. If Target Complete" required>
+											</div>
+										</div>
+										</div>
+										
+										
+										<div class="row">
+										<div class="col-md-12"><div class="col-md-6 pull-left"><select class="form-control" ng-model="setuserlevel" ng-options="obj for obj in userlevelarray"><option value="" selected disabled>Select Userlevel</option></select></div></div>
+										<div class="col-md-12"><h4>Assign To</h4></div>
+											<div class="col-md-12" ng-init="ListUser()">
+											
+											<input type="checkbox" id="checkboxAll"  ng-change="syncusersALL(bool,userList)" ng-model="bool" ng-checked="isChecked(userList)"> <label for="checkboxAll">Select All</label>
+												<ul ng-repeat="data in userList| filter:{'userlevel':  setuserlevel}" style="list-style-type:none;">
+										<li class="col-md-3"><input type="checkbox" id="checkbox{{data.id}}"  ng-change="syncusers(bool,data)" ng-model="bool" ng-checked="isChecked(data)"> <label for="checkbox{{data.id}}">{{data.username}}</label>
+										</li>
+									</ul>
+											</div>
+										</div>
+										
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="AddTarget.$invalid" ng-click="addTarget()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Edit Target</h4>
+						</div>
+							<div class="modal-body">
+								  <form>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="targetdetails[0].name" placeholder="Target Name" required autofocus>
+											</div>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Desrciption:</i>
+											</span>
+											<div class="form-line">
+												<textarea class="form-control" ng-model="targetdetails[0].description" placeholder="Description" required></textarea>
+											</div>
+										</div>
+										<div class="col-md-4 col-lg-4 col-sm-4 col-xs-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>From:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="targetdetails[0].startdate" required >
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4 col-lg-4 col-sm-4 col-xs-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>to:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="targetdetails[0].enddate" required >
+											</div>
+										</div>
+										</div>
+										<div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Target Count:</i>
+											</span>
+											<div class="form-line">
+												<input type="number" class="form-control" ng-model="targetdetails[0].targetcount" placeholder="Target Count" required >
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Amt. If Target Incomplete:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="targetdetails[0].targetincmpltamt" placeholder="Amt. If Target Incomplete" required>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Amt. If Target Complete:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="targetdetails[0].targetcompletedamt" placeholder="Amt. If Target Complete" required>
+											</div>
+										</div>
+										</div>
+										
+										<div class="row">
+										<div class="col-md-12"><div class="col-md-6 pull-left"><select class="form-control" ng-model="setuserlevel" ng-options="obj for obj in userlevelarray"><option value="" selected disabled>Select Userlevel</option></select></div></div>
+										<div class="col-md-12"><h4>Assign To</h4></div>
+											<div class="col-md-12" ng-init="ListUser()">
+											
+											<!-- <input type="checkbox" id="checkboxeditAll"  ng-change="syncedit(bool,userList)" ng-model="bool" ng-checked="isCheckededit(userList)"> <label for="checkboxeditAll">Select All</label> -->
+												<ul ng-repeat="data in userList | filter:{'userlevel':  setuserlevel}" style="list-style-type:none;">
+										<li class="col-md-3"><input type="checkbox" id="checkboxedit{{data.id}}"  ng-click="syncedit(bool,data,targetdetails[0])" ng-model="bool" ng-checked="isCheckededit(data)"> <label for="checkboxedit{{data.id}}">{{data.username}}</label>
+										</li>
+									</ul>
+											</div>
+										</div>
+										
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-click="Edittarget()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= TargetList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>		
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<!-- <th class="text-center">State</th> -->
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'state'; sortReverse = !sortReverse"> <b>Name</b> <span ng-show="sortType= 'state' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'state' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Description</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="ListTarget()">
+							<tr ng-repeat="data in TargetList | filter:search.name | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-left">{{data.name}}</td>
+								<td class="text-left">{{data.description}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="getTargetData(data.id)" data-toggle="modal" data-target="#myModalEdit">Edit</a> | <a class="btn btn-danger" ng-click="DeleteTarget(data.id)">Delete</a></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+   
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+
+    
+</body>
+
+</html>

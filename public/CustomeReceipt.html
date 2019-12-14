@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Receipt</title>
+	 <link rel="stylesheet" href="style.css" media="all" />
+	
+	
+
+	
+</head>
+<body style="margin-top:200px;font-family:sans-serif;">
+<header class="clearfix">
+
+</header></br></br>
+								  <div><center><table class="table" style="padding:5px;">
+									<tr><td  colspan="4"><center><h2>Threesa Infoway Pvt Ltd</h2></center>
+									<center><h4>Shop No 4, 1st Floor, Anand Ram Laghu Sankul, Near Siddhanchal Phase V, Vasant Vihar, Thane(W)</h4></center>
+									</td></tr>
+									<tr style="white-space:nowrap;">
+									<td>Receipt No. :</td>
+									<td>{{data.receiptno}}</td>
+									<td>Receipt Date :</td>
+									<td>{{data.createddate | date:'dd/MM/yyyy'}}</td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td>Customer Name :</td>
+									<td>{{data.username}}</td>
+									<td>Address :</td>
+									<td>{{data.address}}</td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td>Mobile No. :</td>
+									<td>{{data.mobile1}}</td>
+									<td>Payment Mode :</td>
+									<td>{{data.paymentmode}}</td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td>Cheque No. :</td>
+									<td>{{data.chqno}}</td>
+									<td>Amount in word :</td>
+									<td>{{data.amount}}</td>
+									</tr>
+
+									<tr style="white-space:nowrap;">
+									
+									<td colspan="2" style="float:right;"><h4>&#8377;</h4></td>
+									<td class="text-right"><h4>{{data.amount | number:2}}</h4></td>
+									<td>Amount in Received By :</td>
+									<td>{{data.createdby}}</td>
+									</tr>
+									
+								  </table></center>
+								  </div>
+								 
+<footer>
+
+</footer>
+</body>
+</html>

@@ -1,0 +1,198 @@
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet" /> 
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+     <a class="navbar-brand" href="Dashboard.html">Threesa Infoway Pvt.Ltd.</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                    <!-- #END# Call Search -->
+                    
+					<li class="dropdown" ng-init="CheckAttendanceStatus()"><!-- Notifications -->
+					<a href="#" class="" title="Click To set Attendance" ng-click="setMyAttendance()">
+                            <i class="material-icons " id="attendance">toll</i>
+                        </a>
+								</li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            <i class="material-icons">notifications</i>
+                            <span class="label-count">{{notificationcount}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">NOTIFICATIONS</li>
+                            <li class="body">
+                                <ul class="menu" style="list-style-type:none;">
+                                    <li>
+                                        <a href="javascript:void(0);">
+                                            <div class="icon-circle bg-cyan">
+                                                <i class="material-icons">add_shopping_cart</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4>4 sales made</h4>
+                                                <p>
+                                                    <i class="material-icons">access_time</i> 22 mins ago
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="footer">
+                                <a href="javascript:void(0);">View All Notifications</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- #END# Notifications -->
+                    <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+  <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="image">
+                    <img src="images/user.png" width="48" height="48" alt="User" />
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Username: {{username}}</div>
+                    <div class="email">Userlevel: {{userlevel}}</div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="userProfile.html"><i class="material-icons">person</i>Profile</a></li>
+                           <!--  <li role="seperator" class="divider"></li> -->
+                            <li role="seperator" class="divider"></li>
+                            <li><a href="#" id="logoutbtn"><i class="material-icons">input</i>Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li class="active">
+                        <a href="Dashboard.html">
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+					<li>
+                        <a href="#" class="menu-toggle" >
+                            <i class="material-icons">people</i>
+                            <span>User Management</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="userMaster.html">
+								 <i class="material-icons" style="font-size:15px;color:orange;">donut_large</i>
+                                    <span>Users</span>
+                                </a>
+                            </li>
+						  <li>
+                                <a href="BeatManagement.html">
+								 <i class="material-icons" style="font-size:15px;color:orange;">donut_large</i>
+                                    <span>Beat Management</span>
+                                </a>
+                            </li>  
+							
+                        </ul>
+                    </li>
+					<li>
+                        <a href="PlanMaster.html">
+                            <i class="material-icons">description</i>
+                            <span>Plans</span>
+                        </a>
+                    </li>
+					
+					<li>
+                        <a href="customerMaster.html">
+                            <i class="material-icons">group</i>
+                            <span>Customers</span>
+                        </a>
+                    </li>
+					
+					<li>
+                        <a href="newEnquiry.html">
+                            <i class="material-icons">view_list</i>
+                            <span>New Enquiries</span>
+                        </a>
+                    </li>
+
+					<li>
+                        <a href="newConnection.html">
+                            <i class="material-icons">view_list</i>
+                            <span>New Connections</span>
+                        </a>
+                    </li>
+					
+					<li>
+                        <a href="Complaints.html">
+                            <i class="material-icons">error</i>
+                            <span>Complaints</span>
+                        </a>
+                    </li>
+					
+					<li>
+                        <a href="RecieptbookAllocation.html">
+                            <i class="material-icons">view_list</i>
+                            <span>Receipt Book Allocation</span>
+                        </a>
+                    </li>
+					<li>
+                        <a href="leavemangement.html">
+                            <i class="material-icons">error</i>
+                            <span>Leaves Management</span>
+                        </a>
+                    </li>
+					
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                    &copy; 2016 <a href="javascript:void(0);">Threesa Infoway pvt. Ltd.</a>.
+                </div>
+                <div class="version">
+                    <b>Version: </b> 1.0.0
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+		</section>
+		<!-- Custom Js -->
+		<script>
+		$(document).ready(function() {
+				var userid = sessionStorage['userid'];
+								  $("#logoutbtn").click(function(){ 
+								
+									sessionStorage.clear();
+									localStorage.clear();
+									location.href = 'index.html';
+								
+								
+			});
+		});
+		</script>
+    <script src="js/admin.js"></script>
+    <script src="js/pages/index.js"></script>
+
+    <!-- Demo Js -->
+    <script src="js/demo.js"></script>

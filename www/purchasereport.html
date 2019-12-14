@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Sales Force Automation</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+	<script src="angulerjs/amcharts.js"></script>
+	<script src="angulerjs/serial.js"></script>
+	<script src="angulerjs/export.min.js"></script>
+	<link rel="stylesheet" href="angulerjs/export.css" type="text/css" media="all" />
+	<script src="angulerjs/light.js"></script>
+	 <!-- Anguler Js -->
+	 <script src="angulerjs/xlsx.js"></script>					
+	  <script src="angulerjs/filesaver.js"></script>		
+	  <script src="angulerjs/angular.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/report.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="reportApp" ng-controller="reportController">
+    <!-- Page Loader -->
+   <!--  <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div> -->
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div  ng-include="'Mainmenu.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Sales Report</b></h2>
+            </div>
+			<div class="row clearfix">
+			
+				
+				
+					<div style="float:right;margin-right:5%;"><button type="button" class="btn btn-primary" ng-click="exportData('Allorderanalysis.xls')" >Excel</button></div></br>
+				
+				
+				
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= VendorList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div></br>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th class="text-center">Order ID</th>
+							<th class="text-center">Order Date</th>
+							<th class="text-center">Product ID</th>
+							<th class="text-center">Product Name</th>
+							<th class="text-center">Product Quantity</th>
+						   <th class="text-center">Product Price</th> 
+							<th class="text-center">Order Status</th>
+							<th class="text-center">Net Cost</th>
+							<th class="text-center">Net Payable</th>
+							
+						</thead>
+						<tbody ng-init="orderreport()">
+							<tr ng-repeat="data in ordersreport | filter:search | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-center">{{data.ordid}}</td>
+								<td class="text-center">{{data.doe}}</td>
+								<td class="text-center">{{data.productid}}</td>
+								<td class="text-center">{{data.productname}}</td>
+								<td class="text-center">{{data.qty}}</td>
+								 <td class="text-center">{{data.mrp}}</td> 
+								<td class="text-center">{{data.orderstatus}}</td>
+								<td class="text-center">{{data.grossamount}}</td>
+								<td class="text-center">{{data.netamount}}</td>
+								
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+			<!------------------- export to excel-------------------------------->
+
+<div style="display:none" class="col-md-12" id="exportablenew">
+            <table style="font-size:15px;"class="table table-striped table-bordered">
+            <thead style="background:#33ccff;color:white;">
+			
+			<th style="border:1px solid black;"><center>Order ID&nbsp;</center></th>
+			<th style="border:1px solid black;" >Order Date</th>
+			<th style="border:1px solid black;">Product ID</th>
+			<th style="border:1px solid black;">Product Name</th>
+			<th style="border:1px solid black;">Product Quantity</th>
+			<th style="border:1px solid black;">Product Price</th>
+			<th style="border:1px solid black;">Order Status</th>   
+            <th style="border:1px solid black;">Net Cost</th> 
+            <th style="border:1px solid black;">Net Payable</th>   			
+            </thead>
+            <tbody>
+                <tr  style="background:white;" ng-repeat="data in ordersreport">   
+                    <td style="border:1px solid black;">{{ data.ordid}}</td>
+					<td style="border:1px solid black;" >{{ data.doe }}</td>
+					<td style="border:1px solid black;">{{data.productid}}</td>
+					<td style="border:1px solid black;">{{ data.productname}}</td>
+				    <td style="border:1px solid black;">{{ data.qty}}</td>
+					<td style="border:1px solid black;">{{data.mrp}}</td>
+					<td style="border:1px solid black;">{{data.orderstatus}}</td>
+					<td style="border:1px solid black;">{{data.grossamount}}</td>
+					<td style="border:1px solid black;">{{data.netamount}}</td>
+				
+					
+                   
+                </tr>
+            </tbody>
+            </table>
+        </div>
+
+
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="plugins/raphael/raphael.min.js"></script>
+    <script src="plugins/morrisjs/morris.js"></script>
+
+    <!-- ChartJs -->
+    <script src="plugins/chartjs/Chart.bundle.js"></script>
+
+    <!-- Flot Charts Plugin Js -->
+    <script src="plugins/flot-charts/jquery.flot.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.resize.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.pie.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.categories.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.time.js"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+
+    
+</body>
+
+</html>

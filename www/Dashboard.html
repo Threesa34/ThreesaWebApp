@@ -1,0 +1,500 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+	  <script src="https://www.google.com/jsapi"></script>
+   
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+	
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jssip-3.3.4.min.js"></script>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+<!-- <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCwz1GnJ2DxAWh_PiG16wucoYUJPWkBz5I" type="text/javascript"></script> -->
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js??key=AIzaSyAZsLcN73I6r8GvqDBG5-713o-kftemVcU&sensor=false"></script>
+
+	 <!-- Anguler Js -->
+    <script src="angulerjs/angular.min.js"></script>
+	<script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/appProduct.js"></script>
+	<script src="angulerjs/amcharts.js"></script>
+	<script src="angulerjs/serial.js"></script>
+	<script src="angulerjs/light.js"></script>
+	<script src="angulerjs/pia.js"></script>
+	<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+</head>
+
+<body class="theme-red" id="dashboard" ng-app="ProductApp" ng-controller="productController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>DASHBOARD</b></h2>
+            </div>
+			<div class="row clearfix" ng-init="GetCurrentLocation()">
+				<div class="col-md-12">
+					 <div class="demo-radio-button">
+                                <input name="group4" type="radio" id="radio_7" class="radio-col-red" ng-click="getDashboardCount('Today')" checked />
+                                <label for="radio_7">Today</label>
+                                <input name="group4" type="radio" id="radio_8" class="radio-col-red" ng-click="getDashboardCount('Week')"/>
+                                <label for="radio_8">Week</label>
+                                <input name="group4" type="radio" id="radio_9" class="radio-col-red" ng-click="getDashboardCount('Month')"/>
+                                <label for="radio_9">Month</label>
+					</div>
+				</div>
+			</div>
+			<!-- Widgets -->
+            <div class="row clearfix" ng-init="getDashboardCount('Today')">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-pink hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">people</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Customers</div>
+                            <div class="number">{{DashboardCount[0].customers}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-cyan hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">rate_review</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">New Enquiry</div>
+                            <div class="number">{{DashboardCount[0].newenq}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-light-green hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">rate_review</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">New Connection</div>
+                            <div class="number">{{DashboardCount[0].newconn}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-orange hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">rate_review</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Complaint</div>
+                            <div class="number">{{DashboardCount[0].compl}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+			
+			
+
+			
+			
+			<div class="modal fade" id="myModalProfile" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">{{AlluserDetails[0].fullname}}</h4>
+						</div>
+							<div class="modal-body">
+							  <div class="row">
+    	<div class="col-md-12">
+            <div class="panel with-nav-tabs panel-default">
+                <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#Attendance" ng-click="getAttendanceDetailsOfUser(AlluserDetails[0].id);getperticulerUserAttendance(AlluserDetails[0].id)" data-toggle="tab">Attendance</a></li>
+                            <li ng-if="userlevel == 'HO'"><a href="#Advancepay" data-toggle="tab" ng-click="ListAdvancepayment(AlluserDetails[0].id)">Advance Payments</a></li>
+                            <li><a href="#Review" data-toggle="tab">Review</a></li>
+                            
+                        </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+						<div class="tab-pane fade in active" id="Attendance">
+						<div class="col-md-7">
+						<div class="col-md-12">
+						<div class="col-md-4">
+						<input type="month" class="form-control" ng-model="date" ng-change="getperticulerUserAttendance(date,AlluserDetails[0].id)"/>
+						</div>
+						<div class="col-md-4">
+						<input type="search" class="form-control" ng-model="search.filtered" placeholder="search"/>
+				<div ng-if="search.filtered" class="fa fa-times-circle" id="input_img" ng-click="search.filtered = ''"></div>
+						</div>
+						<div class="col-md-4">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPagesForAttendance()}} </b>
+													  
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= userAttendaceListingDashboard.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>			
+						</div>
+						<div class="col-md-12">
+							<div class="table-responsive" >
+								<table class="table">
+								<thead>
+									<th>Date</th>
+									<th>In Time</th>
+									<th>Address</th>
+									<th>Out Time</th>
+									<th>Address</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="data in userAttendaceListingDashboard |filter:search.filtered | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+										<td class="text-center">{{data.attdate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-center">{{data.intime | date:'hh:mm a'}}</td>
+								<td class="text-left">{{data.inaddress}}</td>
+								<td class="text-center">{{data.outtime | date:'hh:mm a'}}</td>
+								<td class="text-left">{{data.outaddress}}</td>
+									</tr>
+								</tbody>
+								</table>
+							</div>
+						</div>
+						</div>
+							<div class="col-md-5">
+								<h1 class="text-center">{{userAttendanceDetails[0].totalsal}} /-</h1>
+								
+								<div class="col-md-12">
+									<div class="col-md-12">Basic Salary : {{userAttendanceDetails[0].salary}} /-</div>
+									<div class="col-md-12">Per Day Salary : {{userAttendanceDetails[0].perdaysal}} /-</div>
+									
+									<div class="col-md-12">
+									<div class="table-responsive">
+									<table class="table">
+										<thead>
+											<th>Present Days</th>
+											<th>Half Days</th>
+											<th>Thursday</th>
+										</thead>
+										<tbody>
+											<tr>
+												<td>{{userAttendanceDetails[0].presentdays}}</td>
+												<td>{{userAttendanceDetails[0].halfdays}}</td>
+												<td>{{userAttendanceDetails[0].thursdays}}</td>
+											</tr>
+											<tr>
+												<td colspan="3">Total Days : {{userAttendanceDetails[0].presentdays + (userAttendanceDetails[0].halfdays  / 2) + userAttendanceDetails[0].thursdays}}</td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                       
+                        <div class="tab-pane fade" id="Advancepay">
+							<div class="row">
+								<div class="col-lg-12">
+								<div class="col-md-6">
+									<form name="Addcomp">
+												
+											<div class="col-md-12">
+											<div class="input-group">
+											<span class="input-group-addon">
+												<i>Month:</i>
+											</span>
+											<div class="form-line">
+												<input type="month" class="form-control" ng-model="AdvanceDetails[0].paymentmonth" autofocus required/>
+											</div>
+											</div>
+											</div>
+											
+											<div class="col-md-12">
+											<div class="input-group">
+											<span class="input-group-addon">
+												<i>Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="AdvanceDetails[0].amt" autofocus required/>
+											</div>
+											</div>
+											</div>
+											<div class="col-md-12">
+											<div class="input-group">
+											<span class="input-group-addon">
+												<i>Cut in Salary:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="AdvanceDetails[0].cut_amt" />
+											</div>
+											</div>
+											</div>
+											<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Addcomp.$invalid" ng-click="AddAdvancePayment()">Save</button>
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="col-md-6">
+								<div class="col-md-6">
+									<div class="col-md-12"><input type="search" class="form-control" ng-model="search.month" placeholder="search"/>
+				<div ng-if="search.month" class="fa fa-times-circle" id="input_img" ng-click="search.month = ''"></div>
+				</div>
+								</div>
+								<div class="col-md-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPagesForAdvance()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= AdvancePaymentList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+									<div class="teble-responsive">
+										<table class="table">
+											<thead>
+												<th>Date</th>
+												<th>Month</th>
+												<th>Amount</th>
+												<th>Cut Amt</th>
+												<th>Balance Amt</th>
+												<th>Action</th>
+											</thead>
+											<tbody>
+											<tr ng-repeat="data in AdvancePaymentList |filter:search.month | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+												<td>{{data.createddate | date:'dd/MM/yyyy'}}</td>
+												<td>{{data.month}}</td>
+												<td>{{data.amt}}</td>
+												<td>{{data.cut_amt}}</td>
+												<td>{{data.amt-data.cut_amt}}</td>
+												<td><a href="#" style="color:orange" ng-click="GetAdvancepayment(data.id)"><i class="fa fa-pencil" aria-hidden="true"></i></a> &nbsp; | &nbsp;<a href="#" style="color:red" ng-click="DeleteAdvancepayment(data.id)"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+											</tr>
+											<tr>
+												<td colspan="6">Total:{{AdvancePaymentList[0].advancebal | number:2}}</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							</div>
+						</div>
+                        <div class="tab-pane fade" id="Review">
+						
+						<div class="row">
+						
+						
+						<div class="col-md-6">
+							<div class="col-md-4 col-sm-4 col-xs-4">
+							<a href="#" ng-click="SetUserreview(AlluserDetails[0].id,'Good')"><img src="images/smiling.png" class="img-responsive" title="Good"/><br><h4  class="text-center">Good</h4></a>
+							<span ng-if="userreviewcounts.length > 0" class="label-count"   style="height:37px;background-color:red;color:white;margin-left:50%;margin-top:-12%;"><h4>{{userreviewcounts[0].gdrvcnt}}</h4></span>
+							</div>
+							<div class="col-md-4  col-sm-4 col-xs-4">
+							<a href="#" ng-click="SetUserreview(AlluserDetails[0].id,'Bad')"><img src="images/sad.png" class="img-responsive" title="Bad"/> <br><h4 class="text-center">Bad</h4></a>
+							<span ng-if="userreviewcounts.length > 0" class="label-count" style="height:37px;background-color:red;color:white;margin-left:50%;margin-top:-12%;"><h4>{{userreviewcounts[0].bdrvcnt}}</h4></span>
+							</div>
+							
+					
+						</div>
+						<div class="col-md-6">
+						<h5 class="text-center">Monthly Review</h5>
+						<input type="month" class="form-control" ng-model="reviewmonth" ng-change="getuserMonthlyReview(reviewmonth,AlluserDetails[0].id)"/>
+						<br>
+						<div class="table-responsive" ng-if="userreviewcounts.length > 0">
+										<table class="table table-box">
+										<thead>
+											<th colspan="3" style="background-color:#d5d5d5;color:black;">Good Review</th>	 	
+											</thead>
+											<tbody>
+												<td>Date</td>
+												<td>Review By</td>
+												<td>Reason</td>
+											<tr ng-if="data.review == 'Good'" ng-repeat="data in userreviewcounts |filter:search.month | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+												<td>{{data.rvddt}}</td>
+												<td>{{data.reviewdby}}</td>
+												<td>{{data.reason}}</td>
+												
+											</tr>
+											
+											</tbody>
+										</table>
+									</div>
+										<div class="table-responsive" ng-if="userreviewcounts.length > 0">
+										<table class="table table-box">
+										<thead>
+											<th colspan="3" style="background-color:#d5d5d5;color:black;">Bad Review</th>	 	
+											</thead>
+											<tbody>
+												<td>Date</td>
+												<td>Review By</td>
+												<td>Reason</td>
+											<tr ng-if="data.review == 'Bad'"  ng-repeat="data in userreviewcounts |filter:search.month | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+												<td>{{data.rvddt}}</td>
+												<td>{{data.reviewdby}}</td>
+												<td>{{data.reason}}</td>
+												
+											</tr>
+											
+											</tbody>
+										</table>
+									</div>
+						</div>
+						</div>
+						
+						</div>
+                        
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class="row clearfix" ng-init="getAnualsalereport()">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                    <div class="card">
+                        <div class="header">
+                            <h2>Report</h2>
+                        </div>
+                        <div class="body">
+                      <div id="chartdivMultiline" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+			<div class="row clearfix" ng-init="getPopulerPlans()">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 pull-right" ng-if="userlevel == 'HO' || userlevel == 'OFFICE'">
+                    <div class="card">
+                        <div class="header">
+                           
+							<div class="row">
+							<div class="col-md-3"> <h2>User Profile</h2></div>
+							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+						<div class="col-md-5 col-xs-6" style="float:right;">
+								<button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+						 <b>  {{currentPage+1}} / {{numberOfPagesUserprofile()}} </b>
+									<input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:30%' ng-model='myValue'>
+								<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= userList.length/7 - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>	
+				</div>
+							
+                        </div>
+                        <div class="body">
+						
+				
+							<div class="row">
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<th>Employee</th>
+									<th>Type</th>
+									<th>Supervisor</th>
+									<th>Profile</th>
+								</thead>
+								<tbody ng-init="ListUser()">
+									<tr ng-repeat="data in userList | filter:search.name | startFrom:currentPage*7 | limitTo:7  | orderBy:sortType:sortReverse">
+										<td>{{data.username}}</td>
+										<td>{{data.username}}</td>
+										<td>{{data.supervisorname}}</td>
+										<td><a href="#" ng-click="getAllUserDetails(data.id);getAttendanceDetailsOfUser(data.id);ListAdvancepayment(data.id);getperticulerUserAttendance(mymonth,data.id)" data-toggle="modal" data-target
+										="#myModalProfile"><h4>Profile</h4></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						</div>
+						</div>
+                    </div>
+                </div>
+				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
+                    <div class="card">
+                        <div class="header">
+                            <h2>Populer Plans</h2>
+                        </div>
+                        <div class="body">
+						<div id="chartwrapper">
+                      <div id="chartdivPiachart" style="width: 100%; height:500px; background-color: #FFFFFF;" ></div>
+                        </div>
+						</div>
+                    </div>
+                </div>
+            </div>
+			
+			
+			<div id="sound"></div>
+					
+        </div>
+    </section>
+
+	
+	
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+   
+
+    
+</body>
+
+</html>

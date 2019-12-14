@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+		<script src="js/jquery.form.min.js"></script>
+	  <script src="angulerjs/jszip.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-all.min.js"></script>
+	  
+    <script src="angulerjs/appEntity.js"></script>
+	
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+	<script>
+        
+         function readURL(input) {
+             
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.image')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(200);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }	
+
+		function readURLPDF(input) {
+             
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.pdffile')
+                        .attr('data', e.target.result)
+                        .width(350)
+                        .height(600);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }	
+				</script>
+</head>
+
+<body class="theme-red"  ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section ng-app="appEntity" ng-controller="entityController as maycontroller">
+     <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" id="YourElementId" ng-app="appEntity" ng-controller="entityController as maycontroller">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Loan Managemnt</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"> </div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" ng-keyup="getTotalLoanAmount()" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="ResetTotal();search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Loan Management</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Adduser">
+								  <div class="row">
+								  <div class="col-md-6">
+								  <div class="input-group" ng-init="ListUser()">
+											<span class="input-group-addon">
+												<i>Employee:</i>
+											</span>
+											<div class="form-line">
+												<select class="form-control" ng-model="loan[0].userid" ng-options="obj.id as obj.username for obj in userList">
+												<option value="" disabled selected>Select Employee</option>
+												</select>
+											</div>
+								  </div>
+								  </div>
+									
+									<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="loan[0].loanamt" placeholder="Amount" onkeypress="return number(event)" required >
+											</div>
+										</div>
+										</div>
+							</div>
+									<div class="row">
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Installments:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="loan[0].installments" placeholder="Installments" maxlength="4" onkeypress="return number(event)" required >
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Starts Month:</i>
+											</span>
+											<div class="form-line">
+												<input type="month" class="form-control" ng-model="loan[0].instmonth" required >
+											</div>
+										</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+										<div class="input-group">
+										<span class="input-group-addon">
+												<i>EMI:</i>
+											</span> <b>{{loan[0].monthlyamt = loan[0].loanamt / loan[0].installments | number:2}} /-</b>
+										</div>
+									</div>
+									</div>
+								  </form>
+							</div>
+							<div class="modal-footer">
+							
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Adduser.$invalid" ng-click="SaveLoandetails()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+										</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="col-md-3 col-xs-6" style="float:left">
+						<b> Total Amount : {{(totalLoanAmount | number:2) || '0.00'}}</b>
+				</div>
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPagesForLoan()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= LoanList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th class="text-center">#</th> 
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'username'; sortReverse = !sortReverse"> <b>Full Name</b> <span ng-show="sortType= 'username' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'username' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Created Date</th>
+							<th class="text-center">Loan Amt.</th>
+							<th class="text-center">Installments</th>
+							<th class="text-center">Starting Month</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="ListLoan()">
+							<tr ng-repeat="data in searchedLoanList = (LoanList | filter:search.name) | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-left">{{$index+1}}</td>
+								<td class="text-left">{{data.employee}}</td>
+								<td class="text-center">{{data.createddate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-right"><p  class="test1">{{data.loanamt | number:2}}</p></td>
+								<td class="text-right">{{data.installments | number:2}}</td>
+								<td class="text-left">{{data.month}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="getLoanData(data.id)" data-toggle="modal" data-target="#myModalAdd">Edit</a> | <a class="btn btn-danger" ng-click="DeleteLoanData(data.id)">Delete</a></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+		
+		
+	
+    </section>
+
+
+	
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+	
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+
+    
+</body>
+
+</html>

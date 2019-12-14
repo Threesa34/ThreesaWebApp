@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+	 <!-- Anguler Js -->
+	<script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appLogin.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="loginApp" ng-controller="loginController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>User Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-md-3 col-lg-3 col-sm-5 col-xs-5"><input type="date" class="form-control" ng-model="date" ng-change="getAttendanceList(date);getAbenceList(date)"/></div>
+			<div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<!-- <div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= userAttendanceList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>	 -->
+				
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Reset Intime</h4>
+								</div>
+							<div class="modal-body">
+							<form name="restintime">
+									<div class="row">
+								<div class="col-md-6">
+										<div class="input-group" ng-init="ListZonesAssignforUserReciept()">
+											<span class="input-group-addon">
+												<i>Employee Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control"  ng-model="UserAttrecord[0].username" readonly />
+											</div>	
+										</div>
+										</div>
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Intime:</i>
+											</span>
+										<div class="form-line">
+												<input type="time" class="form-control" ng-model="UserAttrecord[0].intime"  required >
+											</div>	
+										</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-md-12">
+										<div class="input-group">
+										<span class="input-group-addon">
+												<i>Reason:</i>
+											</span>
+										<div class="form-line">
+												<textarea ng-model="UserAttrecord[0].reason"  placeholder="Reson" class="form-control" required>
+												</textarea>
+											</div>
+											</div>
+										</div>
+									</div>
+									</form>
+									<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="restintime.$invalid" ng-click="resetAttendanceintime()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					
+					 <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                                <li role="presentation" class="active"><a href="#present" data-toggle="tab">Present Employees  <span class="label-count" style="margin-top:-4%;color:white"><b>{{userAttendanceList.length}}</b></span></a></li>
+                                <li role="presentation"><a href="#absent" data-toggle="tab" ng-click="getAbenceList(date)">Absent Emploees  <span class="label-count" style="margin-top:-4%;color:white;"><b>{{userAbsentList.length}}</b></span></a></li>
+                            </ul>
+
+					 <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="present">
+
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						
+						<thead>
+						<tr><td colspan="6"><h4>{{mydate | date:'dd/MM/yyyy'}}</h4></td></tr>
+							<th class="text-center">Username</th>
+							<th class="text-center">In Time</th>
+							<th class="text-center">Address</th>
+							<th class="text-center">Out Time</th>
+							<th class="text-center">Address</th>
+							<th class="text-center" ng-if="fulldate == Currdate"></th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in userAttendanceList | filter:search.name | orderBy:sortType:sortReverse">
+								<td class="text-left">{{data.username}}</td>
+								<td class="text-left">{{data.intime | date:'hh:mm:ss a'}}</td>
+								<td class="text-left">{{data.inaddress}}</td>
+								<td class="text-left">{{data.outtime | date:'hh:mm:ss a'}}</td>
+								<td class="text-left">{{data.outaddress}}</td>
+								<td ng-if="fulldate == Currdate" style="white-space:nowrap;"><button class="btn btn-primary" ng-click="resetAttendance(data.userid)">Reset Out Time</button> &nbsp;<button class="btn btn-primary" ng-click="GetAttendancerecord(data.userid)" data-toggle="modal" data-target="#myModalEdit">Reset In Time</button></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+					
+					<div role="tabpanel" class="tab-pane fade in" id="absent">
+
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						
+						<thead>
+						<tr><td colspan="6"><h4>{{mydate | date:'dd/MM/yyyy'}}</h4></td></tr>
+							<th class="text-left">#</th>
+							<th class="text-center">Username</th>
+							<th class="text-center">Mobile No.</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in userAbsentList | filter:search.name |orderBy:sortType:sortReverse">
+								<td class="text-left">{{$index+1}}</td>
+								<td class="text-left">{{data.username}}</td>
+								<td class="text-center">{{data.mobile1}}</td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="plugins/raphael/raphael.min.js"></script>
+    <script src="plugins/morrisjs/morris.js"></script>
+
+
+    
+</body>
+
+</html>

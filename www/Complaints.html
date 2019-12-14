@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt.Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	
+	   <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+	  <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+    <script src="angulerjs/appEntity.js"></script>
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+</head>
+
+<body class="theme-red" ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section ng-app="appEntity" ng-controller="entityController">
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" id="YourElementId" ng-app="appEntity" ng-controller="entityController">
+        <div class="container-fluid" ng-init="ListRegion();ListArea()">
+            <div class="block-header">
+                <h2><b>Complaint Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.customer" placeholder="search"/>
+				<div ng-if="search.customer" class="fa fa-times-circle" id="input_img" ng-click="search.customer = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Add Complaint</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Addcomp">
+								  <div class="row">
+								<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Username:</i>
+											</span>
+											<div class="form-line" ng-init="ListCustomers()">
+												<select class="form-control" ng-model="complaint.customer" ng-options="obj as obj.username for obj in CustomerList" ng-change="getdatacustomer(complaint.customer)">
+												<option value="" disabled selected>Select Username</option>
+												</select>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Address:</i>
+											</span>
+											<div class="form-line">
+												<textarea class="form-control" ng-model="complaint.address" placeholder="Address" required></textarea>
+											</div>
+										</div>
+										</div>
+									</div>
+										<div class="row">
+										
+									
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Mobile No:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="complaint.mobile1" placeholder="Mobile No" maxlength="10" onkeypress="return number(event)" required >
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Issue</i>
+												</span>
+											<div >
+												<select ng-model="complaint.issue" class="form-control" required>
+												<option value="" selected disabled>Select type</option>
+												<option value="651 Error occur">651 Error occur</option>
+												<option value="691 Error occur">691 Error occur</option>
+												<option value="shifting">shifting</option>
+												<option value="Internet is not working due to some reason">internet is not working due to some reason</option>
+												<option value="Router reset">Router reset</option>
+												<option value="Wire problem">Wire problem</option>
+												<option value="Other">Other problem</option>
+												</select>
+											</div>
+										</div>
+										</div>
+										</div>
+									
+							
+										
+										<div class="row">
+											<div class="col-md-6">
+												<div class="input-group" ng-init="ListUser()">
+											<span class="input-group-addon">
+												<i>Select Employee/Engineer:</i>
+											</span>
+											<div class="form-line">
+												<select class="form-control" ng-model="complaint.userid" ng-options="obj.id as obj.username for obj in userList">
+												<option value="" disabled selected>Select Employee/Engineer</option>
+												</select>
+											</div>
+											</div>
+											</div>
+											
+											<div class="col-md-6" ng-if="complaint.issue == 'Other'">
+												<div class="input-group">
+											<span class="input-group-addon">
+												<i>Other issue:</i>
+											</span>
+											<div class="form-line">
+												<textarea  class="form-control" ng-model="complaint.otherissue">
+												</textarea>
+											</div>
+											</div>
+										</div>
+										</div>
+										
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Addcomp.$invalid" ng-click="AddNewComplaints()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Edit Complaint Details</h4>
+						</div>
+							<div class="modal-body">
+								 <form name="Editcustomer" ng-repeat="complaint in complaintDetails">
+								 <div class="row">
+								<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Username:</i>
+											</span>
+											<div class="form-line" ng-init="ListCustomers()">
+												<select class="form-control" ng-model="complaint.customerid" ng-options="obj.id as obj.username for obj in CustomerList" ng-change="getCustomerData(complaint.customerid)">
+												<option value="" disabled selected>Select Username</option>
+												</select>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Address:</i>
+											</span>
+											<div class="form-line">
+												<textarea class="form-control" ng-model="complaint.address" placeholder="Address" required></textarea>
+											</div>
+										</div>
+										</div>
+									</div>
+										<div class="row">
+										
+									
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Mobile No:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="complaint.mobile1" placeholder="Mobile No" maxlength="10" onkeypress="return number(event)" required >
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Customer Issue</i>
+												</span>
+											<div >
+												<select ng-model="complaint.issue" class="form-control" required>
+												<option value="" selected disabled>Select type</option>
+												<option value="651 Error occur">651 Error occur</option>
+												<option value="691 Error occur">691 Error occur</option>
+												<option value="shifting">shifting</option>
+												<option value="Internet is not working due to some reason">internet is not working due to some reason</option>
+												<option value="Router reset">Router reset</option>
+												<option value="Wire problem">Wire problem</option>
+												<option value="Other">Other problem</option>
+												</select>
+											</div>
+										</div>
+										</div>
+										</div>
+									
+							
+										
+										<div class="row">
+											<div class="col-md-6">
+												<div class="input-group" ng-init="ListUser()">
+											<span class="input-group-addon">
+												<i>Select Employee/Engineer:</i>
+											</span>
+											<div class="form-line">
+												<select class="form-control" ng-model="complaint.userid" ng-options="obj.id as obj.username for obj in userList">
+												<option value="" disabled selected>Select Employee/Engineer</option>
+												</select>
+											</div>
+											</div>
+											</div>
+											
+											<div class="col-md-6" ng-if="complaint.issue == 'Other'">
+												<div class="input-group">
+											<span class="input-group-addon">
+												<i>Other issue:</i>
+											</span>
+											<div class="form-line">
+												<textarea  class="form-control" ng-model="complaint.otherissue">
+												</textarea>
+											</div>
+											</div>
+										</div>
+										</div>
+								</form>
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Editcustomer.$invalid" ng-click="UpdateComplaint()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="modal fade" id="myModalConnection" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Confirm Connection</h4>
+						</div>
+							<div class="modal-body">
+								 <form name="Editcustomer" ng-repeat="customer in enquirydetails">
+								 
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+					
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPageenquiry()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= EnquiriesListing.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>	
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th><center><input type="checkbox" id="allselecdt" ng-change="syncforcomplaintsdelete(bool,complaintlising)" ng-model="bool" ng-checked="isCheckedcomplaintsdelete(complaintlising)"> <label for="allselecdt">Select All</label></center></th>
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'entityname'; sortReverse = !sortReverse"> <b>Date</b> <span ng-show="sortType= 'entityname' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'entityname' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Time</th>
+							<th class="text-center">Customer Name</th>
+							<th class="text-center">Issue</th>
+							<th class="text-center">User Assign</th>
+							<!-- <th class="text-center">Created By</th> -->
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="complaintList()">
+							<tr ng-repeat="data in complaintlising | filter:search.customer || startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+							<td class="text-center"><input type="checkbox" id="cust{{$index}}" ng-change="syncforcomplaintsdelete(bool,data)" ng-model="bool" ng-checked="isCheckedcomplaintsdelete(data)"> <label for="cust{{$index}}"></label></td>
+								<td class="text-left">{{data.complaintdate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-left">{{data.complaintdate | date:'h:mm:ss a'}}</td>
+								<td class="text-left"><span >{{data.customerid}}</span><span >{{data.customername}}</span></td>
+								<td class="text-left">{{data.issue}}</td>
+								<td class="text-left"><span>{{data.username}}</td>
+								<!-- <td class="text-left">{{data.createdbyuser}}</td> -->
+								<td class="text-center"><a class="btn btn-warning" ng-click="getComplatedataData(data.id)" data-toggle="modal" data-target="#myModalEdit">Edit</a> | <a class="btn btn-danger" ng-click="DeleteComplaint(data.id)">Delete</a></td> 
+							</tr>
+							<tr ng-if="Selectedcomplaintsid.length > 0"><td><button class="btn btn-danger" ng-click="DeleteSeletectedComplaints()">Delete</button></td></tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </section>	
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+       <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	
+	   <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appProduct.js"></script>
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+</head>
+
+<body class="theme-red" ng-app="ProductApp" ng-controller="productController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" >
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Stock Statement</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><div class="col-lg-5 col-md-5 col-sm-6 col-xs-6"><input type="date" ng-model="fromdate" class="form-control" ng-change="ListStockStratement(fromdate,todate)"/></div><div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><b>To</b></div><div class="col-lg-5 col-md-5 col-sm-6 col-xs-6"><input type="date" ng-model="todate" class="form-control"ng-change="ListStockStratement(fromdate,todate)"/></div></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th class="text-center">Product</th>
+							<th class="text-center">Opening Bal.</th>
+							<th class="text-center">Qty. Rec.</th>
+							<th class="text-center">Qty. Issued</th>
+							<th class="text-center">Closing Bal.</th>
+						</thead>
+						<tbody ng-init="ListStockStratement()">
+							<tr ng-repeat="data in StockStatement | filter:search.name">
+								<td class="text-left">{{data.name}}</td>
+								<td class="text-left">{{data.openingbal}}</td>
+								<td class="text-left">{{data.recqty}}</td>
+								<td class="text-left">{{data.issuedqty}}</td>
+								<td class="text-left">{{data.closingbal = data.openingbal + data.recqty - data.issuedqty}}</td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    
+</body>
+
+</html>

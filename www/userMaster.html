@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+<script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+	 <!-- Anguler Js -->
+	 <script src="angulerjs/socket.io.js"></script>
+	  <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appLogin.js"></script>
+	
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+	
+</head>
+
+<body class="theme-red" id="YourElementId" ng-app="loginApp" ng-controller="loginController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR' || userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid" ng-init="ListUserData()">
+            <div class="block-header">
+                <h2><b>User Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<!-- <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalUpload">Upload Users</button></div> --><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				
+				
+				<div class="modal fade" id="myModalUpload" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Upload Users</h4>
+						</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="col-md-4">
+											<a href="./files/User Details.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i></a>
+										</div>
+										<div class="col-md-4 pull-right">
+										
+											<div class="file_input_div">
+											<div class="file_input">
+											  <label class="image_input_button mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+												<i style="border:1px solid gray;" class="btn">Choose File</i>
+												<input id="xlf" class="none" type="file"/>
+											  </label>
+											</div>
+										  </div>
+                
+											</div>
+											<div class="col-md-12">
+												<div class="col-md-4 pull-right">
+													<button class="btn btn-primary" onclick="myFunction()" data-dismiss="modal">Submit</button>
+													<button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+						</div>
+				
+				
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New User</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Adduser">
+										 <div class="row">
+											<div class="col-md-6">
+										<div>
+											<span class="col-md-4">
+												<i><b style="color:#2A2525;">UserLevel:</b></i>
+											</span>
+											<div class="col-md-8"><select ng-model="user.userlevel" class="form-control" ng-options="data for data in userlevelarray" ng-change="getsupervisordetails(user.userlevel)">
+											<option value="" selected disabled>Select userlevel</option>
+											</select>
+										</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div>
+											<span class="col-md-4">
+												<i><b style="color:#2A2525;">Supervisor:</b></i>
+											</span>
+											<div class="col-md-8">
+											<select ng-model="user.supervisor" ng-options="data.id as data.username for data in supervisordetailsarr" class="form-control" id="supervisor">
+											<option value="" selected disabled>Select Supervisor</option>
+											</select>
+										</div>
+										</div>
+										</div>
+											
+										 </div>
+										<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Full Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user.fullname" placeholder="Full Name" required>
+											</div>
+										</div>
+
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Address:</i>
+											</span>
+											<div class="form-line">
+												<textarea type="text" class="form-control" ng-model="user.address" placeholder="Address"></textarea>
+											</div>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Contact No:</i>
+											</span>
+											
+												<div class="col-md-6">
+												<div class="form-line">
+												<input type="text" maxlength="10" class="form-control" ng-model="user.mobile1" placeholder="Mobile No. 1" onkeypress="return number(event)" required>
+											</div>
+											</div>
+											<div class="col-md-6 pull-right">
+											<div class="form-line"><input type="text" maxlength="10" class="form-control" ng-model="user.mobile2" placeholder="Mobile No. 2" onkeypress="return number(event)">
+											</div>
+											</div>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Email ID:</i>
+											</span>
+											<div class="form-line">
+												<input type="email" class="form-control" ng-model="user.email" placeholder="Email ID">
+											</div>
+										</div>
+										<hr>
+										 <small>Login Details</small>
+										<div class="row">
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Username:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user.username" placeholder="Username" required>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Password:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user.password" placeholder="Password" required>
+											</div>
+										</div>
+										</div>
+										</div>
+										
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Adduser.$invalid" ng-click="newUser()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">User Details</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Edituser" ng-repeat="user1 in userDetails">
+								  <div ng-show="normview">
+								  <div class="row">
+									<div class="col-md-4">
+									<div class="col-md-12">
+											<div class="md-form" >
+										<div>
+                                          <img src="http://103.252.7.14:8897/uploads/{{user1.photo}}" class="img-responsive" />
+                                            </div>
+                                </div>
+									</div>
+								  </div>
+								  
+								  <div class="col-md-8">
+											<div class="col-md-12">
+											<span class="col-md-4">
+												<i><b style="color:#2A2525;">UserLevel:</b></i>
+											</span>
+											<div class="col-md-8"><select ng-model="user1.userlevel" class="form-control" ng-options="data for data in userlevelarray" ng-change="getsupervisordetails(user1.userlevel)" readonly>
+											<option value="" selected disabled>Select userlevel</option>
+											</select>
+										</div>
+										</div>
+										<div class="col-md-12">
+										<br>
+											<span class="col-md-4">
+												<i><b style="color:#2A2525;">Supervisor:</b></i>
+											</span>
+											<div class="col-md-8" ng-init="getsupervisordetails(user1.userlevel)">
+											<select ng-model="user1.supervisor" ng-options="data.id as data.username for data in supervisordetailsarr" class="form-control" id="supervisor" readonly>
+											<option value="" selected disabled>Select Supervisor</option>
+											</select>
+										</div>
+										</div>
+											
+										 </div>
+								  
+								  </div>
+								   
+									
+										<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Full Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user1.fullname" placeholder="Full Name" required >
+											</div>
+										</div>
+
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Address:</i>
+											</span>
+											<div class="form-line">
+												<textarea type="text" class="form-control" ng-model="user1.address" placeholder="Address" required ></textarea>
+											</div>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Contact No:</i>
+											</span>
+											
+												<div class="col-md-6">
+												<div class="form-line">
+												<input type="text" maxlength="10" class="form-control" ng-model="user1.mobile1" placeholder="Mobile No. 1" onkeypress="return number(event)" required >
+											</div>
+											</div>
+											<div class="col-md-6 pull-right">
+											<div class="form-line"><input type="text" class="form-control" maxlength="10" ng-model="user1.mobile2" placeholder="Mobile No. 2" onkeypress="return number(event)" required >
+											</div>
+											</div>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Email ID:</i>
+											</span>
+											<div class="form-line">
+												<input type="email" class="form-control" ng-model="user1.email" placeholder="Email ID"  >
+											</div>
+										</div>
+										
+										 <legend>Login Details</legend>
+										<div class="row">
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Username:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user1.username"  placeholder="Username" required readonly>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Password:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user1.password" placeholder="Password" required readonly>
+											</div>
+										</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-md-12">
+										<div class="col-md-7">
+											<div class="input-group">
+											<span class="input-group-addon">
+												<i>Mobile ID:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="user1.uuid" placeholder="UUID" required readonly>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-2"><button ng-click="ResetUUID()" class="btn btn-primary">Reset Mobile ID</button></div>
+										</div>
+										</div>
+										<div class="input-group">
+											
+											<div class="col-md-6 pull-right">
+											<div class="col-md-4">
+												<button ng-click="idview= true;normview = false" class="btn btn-info">Create ID</button>
+											</div>
+											<div class="col-md-2">
+												<button class="btn btn-success "  data-dismiss="modal">Close</button>
+											</div>
+											
+											</div>
+											
+										</div>
+										
+										</div>
+										<div ng-show="idview">
+										<div class="col-md-12" id="previewtxt"><strong style="color:red;" class="blink_me">Preview</strong></div>
+										<div class="col-md-12" style="border:1px solid black;background-color:white;" id="html-content-holder">
+										
+										
+										<div class="row" style="background-color:red;color:white;text-align:center;">
+										<center><h2><img src="images/Threesa Logo.png"/style="height:10%;width:10%;">&nbsp;Threesa Infoway Pvt. Ltd.</h2></center>
+										</div>
+										<div id="background">
+									<div id="bg-text"><img src="images/Threesa_Logo.png" style="height:80%;width:80%;"/></div>
+										</div>
+										<div id="content1">
+										<div class="col-md-12" style="margin-top:5%;">
+											<div class="row">
+									<div class="col-md-4">
+									<div class="col-md-12">
+											<div class="md-form" >
+										<div>
+                                          <img src="http://103.252.7.14:8897/uploads/{{user1.photo}}" class="img-responsive" />
+                                            </div>
+                                </div>
+									</div>
+								  </div>
+								  
+								  <div class="col-md-8">
+											<div class="col-md-12">
+												<strong>{{user1.fullname}}</strong>
+											</div>
+										<div class="col-md-12">
+										<br>
+											<strong><span ng-if="user1.userlevel !='FIELD'">{{user1.userlevel}}</span><span ng-if="user1.userlevel =='FIELD'">NETWORK ENGINEER</span></strong>
+										</div>
+											
+										 </div>
+								  
+								  </div>
+
+										<div class="input-group" style="margin-top:5%;">
+											<span class="input-group-addon">
+												<i>Address:</i>
+											</span>
+											<strong>{{user1.address}}</strong>
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Contact No:</i>
+											</span>
+											
+												<div class="col-md-12">
+												<strong>{{user1.mobile1}} /   {{user1.mobile2}}</</strong>
+											</div>
+											
+										</div>
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Email ID:</i>
+											</span>
+											<strong>{{user1.email}}</strong>
+										</div>
+										</div>
+										</div>
+										</div>
+										<div class="input-group">
+										<br>
+											<!-- <div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Edituser.$invalid" ng-click="EditUser()" data-dismiss="modal">Save</button>
+											</div> -->
+											<div class="col-md-6 pull-right">
+											
+											<div class="col-md-4">
+												<button id="btn-Preview-Image" class="btn btn-primary">Preview</button>
+												<a id="btn-Convert-Html2Image" class="btn btn-success">Save</a>
+											</div>
+											<div class="col-md-2">
+												<button class="btn btn-infor "  ng-click="idview= false;normview = true">Cancel</button>
+											</div>
+											
+											</div>
+											<script>
+$(document).ready(function(){
+
+	$("#btn-Convert-Html2Image").hide();
+	$("#previewtxt").hide();
+var element = $("#html-content-holder"); // global variable
+var getCanvas; // global variable
+ 
+    $("#btn-Preview-Image").on('click', function () {
+         html2canvas(element, {
+         onrendered: function (canvas) {
+                $("#previewImage").append(canvas);
+                getCanvas = canvas;
+             }
+         });
+		 $("#btn-Convert-Html2Image").show();
+		 $("#previewtxt").show();
+		 $("#btn-Preview-Image").hide();
+    });
+
+	
+	$("#btn-Convert-Html2Image").on('click', function () {
+	var filename = angular.element(document.getElementById('YourElementId')).scope().userDetails[0].fullname;
+	
+    var imgageData = getCanvas.toDataURL("image/png");
+    // Now browser starts downloading it instead of just showing it
+    var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+    $("#btn-Convert-Html2Image").attr("download", filename+".jpg").attr("href", newData);
+	location.reload();
+	});
+
+});
+
+</script>
+										</div>
+										</div>
+										
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= userList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+				
+				
+				
+				
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+					<table class="table table-bordered table-striped table-hover">
+					
+						<thead>
+							<!-- <th class="text-center">Username</th> -->
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'username'; sortReverse = !sortReverse"> <b>Username</b> <span ng-show="sortType= 'username' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'username' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Full Name</th>
+							<th class="text-center">User Level</th>
+							<th class="text-center">Supervisor</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody >
+							<tr ng-repeat="data in userDataList | filter:search.name |startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-left">{{data.username}}</td>
+								<td class="text-left">{{data.fullname}}</td>
+								<td class="text-left">{{data.userlevel}}</td>
+								<td class="text-left">{{data.supervisorname}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="getUserData(data.id)" data-toggle="modal" data-target="#myModalEdit">VIEW</a> <!-- | <a class="btn btn-danger" ng-click="DeleteUser(data.id)">Delete</a> --></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+</body>
+<script>	
+	var X = XLSX;
+     
+
+function saveTextAsFile(errtxt,errfile)
+					{    
+		
+					
+						var textToSaveAsBlob = new Blob([errtxt], {type:"text/plain"});
+						var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+						var fileNameToSaveAs = errfile;
+					 
+						var downloadLink = document.createElement("a");
+						downloadLink.download = fileNameToSaveAs;
+						downloadLink.href = textToSaveAsURL;
+						document.body.appendChild(downloadLink);
+
+						downloadLink.click();
+						
+						location.reload();
+					
+					}
+        function to_json(workbook) {
+            var result = {};
+			var data2pass = {};
+            workbook.SheetNames.forEach(function(sheetName) {
+                var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+				var len = workbook.SheetNames.length;
+                 if (roa.length > 0) {
+                    result[sheetName] = roa;
+					angular.element(document.getElementById('YourElementId')).scope().UploadUsers(roa);
+				}
+                   
+            });
+            return result;
+        }
+
+        function process_wb(wb) {
+            var output = "";
+            output = JSON.stringify(to_json(wb), 2, 2);
+        }
+			
+			var xlf = document.getElementById('xlf');
+			
+			
+			var data = 0; 
+			
+			var  prevevent = {};
+			function myeventnew(eee) {
+				  prevevent = eee;
+			}
+			
+			function myFunction() {
+				 var files = prevevent.target.files; 
+					var f = files[0];
+					var reader = new FileReader();
+					var name = f.name;
+					reader.onload = function(prevevent) {
+						var data = prevevent.target.result;
+						var wb;
+							wb = X.read(data, {
+							type: 'binary'
+							});
+							process_wb(wb);
+					};
+            reader.readAsBinaryString(f);
+
+			}
+			
+			
+				function handleFile(e) {
+				var ee = e;
+				if(ee)
+					{myeventnew(ee);}
+			
+				
+		} 
+
+		 
+
+        if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+    </script>
+	
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+	
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+
+    
+
+</html>

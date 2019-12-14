@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
+
+	<link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+	
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+
+	 <!-- Anguler Js -->
+	  <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+	 <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appMasters.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="MasterApp" ng-controller="masterController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+       <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Beat Management</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.city" placeholder="search"/>
+				<div ng-if="search.city" class="fa fa-times-circle" id="input_img" ng-click="search.city = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New Beat</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="addbeat">
+								 <div class="row">
+								 <div class="col-md-6">
+								  <div class="input-group">
+											<span class="input-group-addon">
+												<i>Beat Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="beat.beatname" placeholder="Beat name" required autofocus>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6" ng-init="ListUser()">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>User:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="beat.user" typeahead="user as user.username for user in userList | filter:$viewValue|filter: {userlevel:'FIELD'}" placeholder="Select User" typeahead-on-select="beatuserid = $item.id" required>
+											</div>
+										</div>
+									</div>	
+								</div>
+								<div class="row" ng-init="ListArea()">
+									<div class="col-md-12">
+										<table class="table">
+										<thead>
+											<th>Week 1</th>
+											<th>Week 2</th>
+										</thead>
+										<tr ng-repeat="data in beatarea">
+											<td><input class="form-control" ng-model="data.week1" placeholder="select area" typeahead="user as user.areaname for user in AreaList | filter:$viewValue" typeahead-on-select="data[$index].week1area = $item.id"/></td>
+											<td><input class="form-control" ng-model="data.week2" placeholder="select area" typeahead="user as user.areaname for user in AreaList | filter:$viewValue" typeahead-on-select="data[$index].week2area = $item.id"/></td>
+										</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2 pull-right"><button class="btn btn-primary" ng-click="AddNewBeat()">Submit</button></div>
+								</div>
+								  </form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Edit Beat</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="editbeat">
+										<div class="row">
+								 <div class="col-md-6">
+								  <div class="input-group">
+											<span class="input-group-addon">
+												<i>Beat Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="beatDetails[0].beatname" placeholder="Beat name" required autofocus>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6" ng-init="ListUser()">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>User:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="beatDetails[0].user" typeahead="user as user.username for user in userList | filter:$viewValue|filter: {userlevel:'SR'}" placeholder="Select User" typeahead-on-select="beatuserid = $item.id" required>
+											</div>
+										</div>
+									</div>	
+								</div>
+								<div class="row" ng-init="ListArea()">
+									<div class="col-md-12">
+										<table class="table">
+										<thead>
+											<th>Week 1</th>
+											<th>Week 2</th>
+										</thead>
+										<tr ng-repeat="data in beatDetails">
+											<td><input class="form-control" ng-model="data.week1area" placeholder="select area" typeahead="user as user.areaname for user in AreaList | filter:$viewValue" typeahead-on-select="data[$index].week1area = $item.id"/></td>
+											<td><input class="form-control" ng-model="data.week2area" placeholder="select area" typeahead="user as user.areaname for user in AreaList | filter:$viewValue" typeahead-on-select="data[$index].week2area = $item.id"/></td>
+										</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-2 pull-right"><button class="btn btn-primary" ng-click="EditBeat()">Submit</button></div>
+								</div>
+								  </form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPagesbeat()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= BeatList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<!-- <th class="text-center">City</th> -->
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'city'; sortReverse = !sortReverse"> <b>Beat</b> <span ng-show="sortType= 'city' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'city' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">User</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="Listbeat()">
+							<tr ng-repeat="data in BeatList | filter:search.city | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-left">{{data.beatname}}</td>
+								<td class="text-left">{{data.username}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="getBeatDetails(data.id)" data-toggle="modal" data-target="#myModalEdit">Edit</a> | <a class="btn btn-danger" ng-click="deleteBeatDetails(data.id)">Delete</a></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+  
+</body>
+
+</html>

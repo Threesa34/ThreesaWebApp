@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+	  <script src="https://www.google.com/jsapi"></script>
+   
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+	
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	    <script src="angulerjs/angular.min.js"></script>
+	  <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+	  <script src="angulerjs/filesaver.js"></script>
+	  <script src="angulerjs/socket.io.js"></script>
+
+	<script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appMasters.js"></script>
+	<script>
+        
+         function readURL(input) {
+	if (input.files && input.files[0]) {
+                var reader = new FileReader();
+				
+                reader.onload = function (e) {
+                    $('.image')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(200);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }	
+		</script>
+</head>
+
+<body class="theme-red" ng-app="MasterApp" id="YourElementId" ng-controller="masterController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+       <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+		
+		
+            <div class="block-header">
+                <h2><b>Advertisement</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" ng-click="Advertisement = []" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.area" placeholder="search"/>
+				<div ng-if="search.area" class="fa fa-times-circle" id="input_img" ng-click="search.area = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="modal fade" id="SendSMS" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Send SMS</h4>
+						</div>
+							<div class="modal-body">
+								<div class="row">
+								<div class="col-md-6">
+											<br>
+											<br>
+												<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Sender HOST:</i>
+											</span>
+											<div class="form-line">
+												<select class="form-control" ng-model="senderhost" ng-options="obj.value as obj.name for obj in smssenderhosts">
+													<option value="" selected disabled>select Host</option>
+												</select>
+											</div>
+								</div>
+											</div>
+											
+											<div class="col-md-6">
+											<br>
+											<br>
+												<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Sender ID:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="senderid" name="name" placeholder="Sender ID"  />
+											</div>
+								</div>
+											</div>
+									<div class="col-md-12">
+										<div class="col-md-4">
+											<a href="./files/ClientsData.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i></a>
+										</div>
+										<div class="col-md-4 pull-right">
+										
+											<div class="file_input_div">
+											<div class="file_input">
+											  <label class="image_input_button mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+												<i style="border:1px solid gray;" class="btn">Choose File</i>
+												<input id="xlf" class="none" type="file"/>
+											  </label>
+											</div>
+										  </div>
+                
+											</div>
+											</div>
+											<div class="col-md-12 col-sm-12 col-lg-12">
+												<input class="form-control" ng-model="searchClient" placeholder="Search">
+												<br>
+											</div>
+											<div class="col-md-12 col-sm-12 col-lg-12" style="height:420px;overflow:auto">
+												<div class="table-responsive">
+													<table class="table table-bordered">
+														<thead>
+															<th></th>
+															<th>#</th>
+															<th>Mobile Number</th>
+															<th></th>
+														</thead>
+														<tbody>
+															<tr ng-repeat="data in Clientsdata | filter:searchClient">
+																<td><a href="#" class="text-danger" ng-click="RemoveNumber($index)"><i class="fa fa-minus-circle" aria-hidden="true"></i></a></td>
+																<td>{{$index +1}}</td>
+																<td><input type="text" ng-model="data.DTDS0" class="form-control"/></td>
+																<td><i ng-if="data.status === 0" class="fa fa-check text-success" aria-hidden="true"></i> &nbsp;{{data.ShootId}}</td>
+															</tr>
+															
+														</tbody>
+													</table>
+												</div>
+											</div>
+											
+											<div class="col-md-12">
+												<div class="col-md-4 pull-left">
+												<button class="btn btn-primary" ng-click="AddNewNumber()">Add New</button>
+												</div>
+												<div class="col-md-4 pull-right">
+													<button ng-if="verifycnts && Clientsdata.length <= 0" class="btn btn-primary" onclick="myFunction()">Verify</button>
+													<button ng-if="sendmsg  || Clientsdata.length > 0" class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Please wait"  ng-click="SendMessage()">Send</button>
+													<button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+							
+							<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New</h4>
+						</div>
+							<div class="modal-body">
+						<form name="advertisement" id="uploadForm" enctype="multipart/form-data" action="/api/Advertisment" method="post">
+								
+								<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="Advertisement[0].name" name="name" placeholder="Name" required />
+											</div>
+								</div>
+								
+								<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Description:</i>
+											</span>
+											<div class="form-line">
+												<textarea class="form-control" ng-model="Advertisement[0].description" name="description" placeholder="Description">
+												</textarea>
+											</div>
+								</div>
+								<div class="row">
+								<div class="col-md-5 col-sm-12 col-xs-12">
+								<label class="image_input_button mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+								<i style="border:1px solid gray;" class="btn">Upload Image</i>
+									<input type="file" onchange="readURL(this);" name="advertisement"/>
+								</label>
+								</div>
+									<div class="col-md-7 col-sm-12 col-xs-12">
+										<div class="input-group">
+											<div class="row">
+											<div class="md-form" >
+										<div>
+                                          <img src="uploads/{{Advertisement[0].filename}}" class="image img-responsive" />
+                                            </div>
+                                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+									<input type="text" name="createdby" ng-model="userid" style="visibility:hidden"/>
+									
+									<input type="text" name="id" ng-model="Advertisement[0].id" style="visibility:hidden"/>
+									
+									<input type="text" name="oldfilename" ng-model="Advertisement[0].filename" style="visibility:hidden"/>
+								
+							<div class="input-group">
+								<div class="">
+									<button type="submit" class="btn btn-success pull-right" ng-disabled="advertisement.$invalid">Save</button>
+								</div>
+							</div>
+							
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<span style="color:red;font-size:18px;" id="status"></span>
+							</div>
+						</form>
+						<script>
+								  $(document).ready(function() {
+									 
+									 $('#uploadForm').submit(function() {
+										 $("#status").empty().text("File is uploading...");
+
+										$(this).ajaxSubmit({
+
+											error: function(xhr) {
+													status('Error: ' + xhr.status);
+											},
+
+											success: function(response) {
+													alert(response)
+													$("#status").empty().text(response);
+													location.reload();
+											}
+									});
+									return false;
+									
+									});    
+								});
+						</script>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPagesadv()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= AdvertismentList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th class="text-left">#</th>
+							<th class="text-left">Description</th>
+							<th class="text-left">Banner</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="ListAdvertsiment()">
+							<tr ng-repeat="data in AdvertismentList | filter:search.area | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-left">{{$index + 1}}</td>
+								<td class="text-left">{{data.description}}</td>
+								<td><div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3"><center><img ng-src="uploads/{{data.filename}}" style="height:100px;width:100px;margin:0 auto;" class="img-responsive"/></center></div></td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="GetAdvertisement($index)" data-toggle="modal" data-target="#myModalAdd">Edit</a> | <a class="btn btn-danger" ng-click="DeleteAdvertsiment(data)">Delete</a> | <a class="btn btn-primary" ng-click="GetAdvertisement($index)" data-toggle="modal" data-target="#SendSMS">Send</a></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+			<a href="http://103.252.7.5:8897/advReports/{{smsStatus}}" id="reportDownload" download>Download</a>
+			
+			<!-- <div class="col-md-12" id="exportReport" style="display:none">
+				<table class="table table-bordered table-striped table-hover" border="1">
+						<thead>
+							<th class="text-center" style="background-color:red;color:white;">Number</th>
+							<th class="text-center" style="background-color:red;color:white;">Status</th>
+							<th class="text-center" style="background-color:red;color:white;">Message</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="smssts in smsStatus">
+								<td class="text-left">{{smssts.number}}</td>
+								<td class="text-left" ng-if="smssts.status === 'FAILD'" style="color:red">{{smssts.status}}</td>
+								<td class="text-left" ng-if="smssts.status === 'SUCCESS'" style="color:green">{{smssts.status}}</td>
+								<td class="text-left">{{smssts.msg}}</td>
+							</tr>
+						</tbody>
+						</table>
+			</div> -->
+			
+        </div>
+    </section>
+
+	
+	
+		<script>	
+	var X = XLSX;
+     
+
+function saveTextAsFile(errtxt,errfile)
+					{    
+		
+					
+						var textToSaveAsBlob = new Blob([errtxt], {type:"text/plain"});
+						var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+						var fileNameToSaveAs = errfile;
+					 
+						var downloadLink = document.createElement("a");
+						downloadLink.download = fileNameToSaveAs;
+						downloadLink.href = textToSaveAsURL;
+						document.body.appendChild(downloadLink);
+
+						downloadLink.click();
+						
+						location.reload();
+					
+					}
+        function to_json(workbook) {
+            var result = {};
+			var data2pass = {};
+            workbook.SheetNames.forEach(function(sheetName) {
+                var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+				var len = workbook.SheetNames.length;
+                 if (roa.length > 0) {
+                    result[sheetName] = roa;
+					angular.element(document.getElementById('YourElementId')).scope().SendAdvertisement(roa);
+				}
+                   
+            });
+            return result;
+        }
+
+        function process_wb(wb) {
+            var output = "";
+            output = JSON.stringify(to_json(wb), 2, 2);
+        }
+			
+			var xlf = document.getElementById('xlf');
+			
+			
+			var data = 0; 
+			
+			var  prevevent = {};
+			function myeventnew(eee) {
+				  prevevent = eee;
+			}
+			
+			function myFunction() {
+				 var files = prevevent.target.files; 
+					var f = files[0];
+					var reader = new FileReader();
+					var name = f.name;
+					reader.onload = function(prevevent) {
+						var data = prevevent.target.result;
+						var wb;
+							wb = X.read(data, {
+							type: 'binary'
+							});
+							process_wb(wb);
+					};
+            reader.readAsBinaryString(f);
+
+			}
+			
+			
+				function handleFile(e) {
+				var ee = e;
+				console.log(ee);
+				if(ee)
+					{myeventnew(ee);}
+			
+				
+		} 
+
+		 
+
+        if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+    </script>
+	
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+
+</body>
+
+</html>

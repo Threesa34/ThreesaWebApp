@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+
+	 <!-- Anguler Js -->
+	  <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+	 <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appLogin.js"></script>
+	
+	<style>
+		
+		.btmnavbar {
+							  overflow: hidden;
+							  background-color: #F5F5F5;
+							  position: fixed;
+							  bottom: 0;
+							  width: 100%;
+							  white-space:nowrap;
+							  height:55px;
+							}
+
+							.btmnavbar a {
+							  
+							  display: block;
+							  color: #f2f2f2;
+							  text-align: center;
+							  padding: 14px 16px;
+							  text-decoration: none;
+							  font-size: 20px;
+							}
+
+							.btmnavbar a:hover {
+							  
+							  color: black;
+							}
+
+							.btmnavbar a.active {
+							  
+							  color: white;
+							}
+
+						 .message
+      {
+        padding: 5px 5px 5px 5px;
+      }
+      .msgContainerDiv
+      {
+        overflow-y: scroll !important;
+		 
+      }
+		
+		.container1 {
+    border: 2px solid #dedede;
+    background-color: #F5F5DC;
+    border-radius: 5px;
+    padding: 2px;
+	max-width: 600px;
+    width: 100%;
+	float:right;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: #F0FFFF;
+	max-width: 600px;
+    width: 100%;
+	float:left;
+}
+
+.container1::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.container1 font {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.container1 font.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+}
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+.time-left {
+    float: left;
+    color: #999;
+}
+	
+		
+		
+	</style>
+	
+</head>
+
+<body class="theme-red" ng-app="loginApp" ng-controller="loginController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" ng-init="GetCHatContent()">
+        <div class="container-fluid">
+			 <div class="row clearfix" style="margin-top:-20px;overflow-y:auto;margin-bottom:50px;">
+			<div id="incomingMessages" name="incomingMessages" class="msgContainerDiv" ></div>
+        </div>
+		
+        </div>
+		<div class="row clearfix">
+				<div class="col-sm-12 col-xs-12 btmnavbar">
+					<div class="col-md-9 col-sm-12 col-xs-12" style="margin-top:1px;margin-left:1px;">
+					<div class="input-group">
+						<div class="form-line">
+							<textarea name="messageText" class="form-control" placeholder="Type a message" id="messageText" style="height:30px;" autofocus></textarea>
+						</div>
+						 <span class="input-group-addon">
+							<a href="#" id="SendButton">
+							<i class="material-icons" style="font-size:2.5rem;color:black;margin-top:-10px;">send</i>
+							</a>
+                          </span>
+					</div>
+				</div>
+				</div>
+			</div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+  
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+
+    
+</body>
+
+</html>

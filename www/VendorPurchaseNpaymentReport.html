@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+	
+	 <!-- Anguler Js -->
+	 <script src="angulerjs/xlsx.js"></script>					
+	  <script src="angulerjs/filesaver.js"></script>		
+	  <script src="angulerjs/angular.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+	<script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/report.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="reportApp" ng-controller="reportController">
+    <!-- Page Loader -->
+     <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div> 
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div  ng-include="'Mainmenu.html'"></div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h3><b>Vendorwise Purchase & payment Report</b></h3>
+				 </div>
+				 
+			<div class="row clearfix" ng-init="VendorList()">
+			
+				<div class="col-md-12col-lg-12 col-sm-12 col-xs-12" >
+				 <div class="col-md-3 pull-right" >
+		
+			 
+            <input type="search" ng-model="search.all" class="form-control input-sm w-lg inline m-r"  placeholder="Search">
+			<div ng-if="search.all" class="fa fa-times-circle" id="input_img" ng-click="search.all = ''"></div>
+			</div>
+				</div>
+				<div class="col-sm-12" >
+				
+			 <div class="col-md-3">
+				<label>Vendor</label>
+				<input type="text" ng-model="Vendor" class="form-control input-sm w-lg inline m-r" typeahead="obj as obj.name for obj in VendorListing | filter:$viewValue" typeahead-on-select="GetVendorviseReport($item.id,fromdate,todate)"   placeholder="Vendor"/>
+			</div>
+
+
+			<div class="col-md-3" >
+			 <label>From Date</label>
+            <input type="date" ng-model="fromdate" class="form-control input-sm w-lg inline m-r" ng-change="purdatesearchreport(fromdate,todate)"  placeholder="Start Date"></div>
+			
+			<div class="col-md-3"> <label>To Date</label><input type="date" ng-change="purdatesearchreport(fromdate,todate)" ng-model="todate" class="form-control input-sm w-lg inline m-r"  placeholder="End Date">
+			</div>
+			
+			
+			
+		
+		
+			<br class="visible-sm visible-xs">
+			<div class="col-sm-2 pull-right" ><br class="visible-lg visible-md"><button type="button" class="btn btn-primary" ng-click="exportData('Allorderanalysis.xls')" >Export In Excel</button></div>
+			</div>
+			<br class="visible-sm visible-xs">
+	       <div style="float:left;margin-left:3%;">
+			<br class="visible-lg visible-md">
+			
+					    
+					   </div>
+					    <div style="float:left;" ><br class="visible-lg visible-md"><strong style="color:#00688B">Total NetAmount:</strong>&nbsp;<b>{{getTotal()|number:2}}</b></div>
+			
+			
+				
+				<div class="col-md-3 col-xs-6" style="float:right"><br class="visible-lg visible-md">
+				
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= vendorsreport.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div></br>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered">
+						<thead>
+							<th class="text-center">Purchase ID</th>
+							<th class="text-center">Purchase Date</th>
+							<th class="text-center">Payment Date</th>
+							<th class="text-center">Invoice Date</th>
+							<th class="text-center">Vendor Name</th>
+							<th class="text-center">Product Name</th>
+							<th class="text-center">Product Quantity</th>
+							<!-- <th class="text-center">Product Price</th> -->
+							<!-- <th class="text-center">Tax Amount</th>
+							<th class="text-center">Net Cost</th> -->
+							<th class="text-center">PO Amount</th>
+							<th class="text-center">Paid Amount</th>
+							<th class="text-center">pending Amount</th>
+							<!-- <th class="text-center">Net Amount</th>
+							<th class="text-center">Paid Amount</th>
+							<th class="text-center">Pending Amount</th> -->
+						 
+							
+						</thead>
+						<tbody ng-init="vendorsreports()">
+							<tr ng-repeat="data in vendorsreport | filter:search.all | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-center">{{data.poid}}</td>
+								<td class="text-center">{{data.podate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-center">{{data.createddate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-center">{{data.grinvoicedate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-center">{{data.vendorname}}</td>
+								<td class="text-center">{{data.productslist}}</td>
+								<td class="text-center">{{data.totalqty}}</td>
+								<!-- <td class="text-right">{{data.porate | number:2}}</td> -->
+								<!-- <td class="text-right">{{data.taxamount | number:2}}</td>
+								<td class="text-right">{{data.grossamount | number:2}}</td> -->
+								<td class="text-right">{{data.amount | number:2}}</td>
+								<td class="text-right">{{data.paidamount | number:2}}</td>
+								<td class="text-right">{{data.amount - data.paidamount | number:2}}</td>
+								<!-- <td class="text-right">{{data.totalamount | number:2}}</td>
+								
+								<td class="text-right">{{data.totalpaidamount | number:2}}</td>
+								<td class="text-right">{{(data.pendingamt | number:2) || '00.00'}}</td> -->
+								 
+								
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+			<!------------------- export to excel-------------------------------->
+
+<div style="display:none" class="col-md-12" id="exportablenew">
+            <table style="font-size:15px;"class="table table-striped table-bordered">
+            <thead style="background:#33ccff;color:white;">
+			
+			<th style="border:1px solid black;"><center>Purchase ID</center></th>
+			<th style="border:1px solid black;" >Purchase Date</th>
+			<th style="border:1px solid black;">Vendor Name</th>
+			<th style="border:1px solid black;">Product Name</th>
+			<th style="border:1px solid black;">Product Quantity</th> 
+            <th style="border:1px solid black;">Product Price</th>
+			  <th style="border:1px solid black;">Tax Amount</th>
+			<th style="border:1px solid black;">Net Cost</th>
+			<th style="border:1px solid black;">Net Amount</th>			
+            </thead>
+            <tbody>
+                <tr  style="background:white;" ng-repeat="data in vendorsreport">   
+                    <td class="text-center">{{data.purchaseid}}</td>
+								<td class="text-center">{{data.doe}}</td>
+								<td class="text-center">{{data.vendorname}}</td>
+								<td class="text-center">{{data.productname}}</td>
+								<td class="text-center">{{data.qty}}</td>
+								<td class="text-right">{{data.porate | number:2}}</td>
+								<td class="text-right">{{data.taxamount | number:2}}</td>
+								<td class="text-right">{{data.grossamount | number:2}}</td>
+								<td class="text-right">{{data.netamount | number:2}}</td>
+								 
+					
+                   
+                </tr>
+            </tbody>
+            </table>
+        </div>
+
+
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="plugins/raphael/raphael.min.js"></script>
+    <script src="plugins/morrisjs/morris.js"></script>
+
+    <!-- ChartJs -->
+    <script src="plugins/chartjs/Chart.bundle.js"></script>
+
+    <!-- Flot Charts Plugin Js -->
+    <script src="plugins/flot-charts/jquery.flot.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.resize.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.pie.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.categories.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.time.js"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+
+    
+</body>
+
+</html>

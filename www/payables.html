@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+   <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	 <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appProduct.js"></script>
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+</head>
+
+<body class="theme-red" ng-app="ProductApp" ng-controller="productController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section>
+      <div  ng-include="'Mainmenu.html'"></div>
+    </section>
+
+    <section class="content" >
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>A/C. Payables</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><div class="col-lg-5 col-md-5 col-sm-6 col-xs-6"><input type="date" ng-model="fromdate" class="form-control"/></div><div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><b>To</b></div><div class="col-lg-5 col-md-5 col-sm-6 col-xs-6"><input type="date" ng-model="todate" class="form-control"ng-change="Listacpayables(fromdate,todate,vendorid)"/></div></div>
+				
+				<div class="col-lg-3 col-md-3 col-sm-8 col-xs-8" ng-init="VendorList()">
+				<select ng-model="vendorid" class="form-control" ng-options="obj.id as obj.name for obj in VendorListing" ng-change="Listacpayables(fromdate,todate,vendorid)">
+				<option value="" selected disabled>Select Vendor</option>
+				</select>
+											</div>
+				
+				<div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.payable" placeholder="search"/>
+				<div ng-if="search.payable" class="fa fa-times-circle" id="input_img" ng-click="search.payable = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th class="text-center">Vendor</th>
+							<th class="text-center">Opening Bal.</th>
+							<th class="text-center">Credit</th>
+							<th class="text-center">Debit</th>
+							<th class="text-center">Closing Bal.</th>
+						</thead>
+						<tbody ng-init="Listacpayables()">
+							<tr ng-repeat="data in acpayables | filter:search.payable">
+								<td class="text-left">{{data.name}}</td>
+								<td class="text-right">{{data.openingbal | number:2}}</td>
+								<td class="text-right">{{data.credit | number:2}}</td>
+								<td class="text-right">{{data.debit | number:2}}</td>
+								<td class="text-right">{{data.closingbal =  data.credit - data.debit | number:2}}</td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<!-- Order Module -->
+			
+					<div class="modal fade" id="myModalOrder" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New Order</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="GetOrder">
+										<div class="row">
+										<div class="col-md-4">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Shop Name: &nbsp;  {{CustomerDetails[0].entityname}}</i>
+											</span>
+										</div>
+										</div>
+										<div class="col-md-4">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Contact Person: &nbsp;   {{CustomerDetails[0].contactperson}}</i>
+											</span>
+										</div>
+										</div>
+										<div class="col-md-4">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Contact No.:&nbsp;{{CustomerDetails[0].mobile1}} / {{CustomerDetails[0].mobile2}}</i>
+											</span>
+										</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-md-12">
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Delivery ADD.: &nbsp; </i>
+											</span>
+											<p>{{CustomerDetails[0].diliveryaddress}}</p>
+										</div>
+										</div>
+										<div class="col-md-6" ng-repeat="data in CustomerDetails | limitTo : 1">
+										<div class="input-group"  ng-init="getDepoFororder(data.entitytype)">
+											<span class="input-group-addon">
+												<i>Order To.:</i>
+											</span>
+											<div class="form-line">
+											<select class="form-control"ng-model="CustomerDetails[0].deponame" ng-options="obj.id as obj.deponame for obj in Depolist" required>
+											<option value="" selected>Select Option</option>
+											</select>
+											</div>
+										</div>
+										</div>
+										</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-12">
+												<div class="table-responsive">
+												<table class="table table-bordered table-striped table-hover">
+												<thead>
+													<th>Product</th>
+													<th>MRP</th>
+													<th>Sale Rate</th>
+													<th>Qty.</th>
+													<th>Free Qty.</th>
+													<th>Amount</th>
+												</thead>
+												<tbody>
+												<tr ng-repeat="data in ProductsArray">
+												<td ng-init="ListProducts()">
+													<a href="#" ng-click="RemoveRow(data)" style="color:red;text-decoration:none;" class="material-icons">remove_circle_outline</a>
+												<input type="text" class="form-control pull-right" id="prd{{$index}}"  ng-model="data.product" typeahead="product.name as product.name for product in ProductList | filter:$viewValue | filter:name| unique:'name'" placeholder="Select Product" style="width:80%;"  required typeahead-on-select="getMrpOnProductname($item.name,$index)"/>
+												
+												<span class="pull-right" style="color:red;">{{ProductsArray[$index].balmessage}}</span>
+												</td>
+												<td style="width:15%;">
+												
+													<select ng-model="data.mrp" ng-options="product.mrp as product.mrp for product in ProductsArray[$index].fixedmrp" id="mrp{{$index}}" class="form-control" ng-change="onSelectmrpNprd(data.product,data.mrp,$index,CustomerDetails[0].entitytype);checkstockBal(data.product,data.mrp,$index);">
+													<option value="" disabled selected>MRP</option>
+													</select>
+													</td>
+												<td class="text-right">{{data.salerate | number:2}}</td>
+												<td style="width:15%;"><input type="text" class="form-control" ng-model="data.qty" id="qty{{$index}}" placeholder="Quantity" onkeypress="return number(event)" ng-blur="setOrderfinalamount()"/></td>
+												<td style="width:15%;"><input type="text" class="form-control" ng-model="data.freeqty" placeholder="Free Qty." onkeypress="return number(event)"/></td>
+												<td class="text-right">{{data.amount = data.qty * data.salerate | number:2}}</td>
+												</tr>
+												<tr>
+												<td><button class="btn btn-primary" ng-click="AddNewRow()">Add SKU</button></td>
+												<td><i>Total Qty.</i> <br>{{totalqty}}</td>
+												<td><i>Gross Amount</i> <br>{{grossamount | number:2}}</td>
+												<td><i>Tax Amount</i><br>
+												{{taxamount | number:2}}</td>
+												<td colspan="2">
+												<i>Net Amount</i><br>
+												{{netamount | number:2}}</td>
+												</tr>
+												</tbody>
+												</table>
+												</div>
+											</div>
+										</div>
+										<div class="input-group">
+											<div class="col-md-12">
+												<button class="btn btn-success pull-right" ng-disabled="GetOrder.$invalid" ng-click="AddSalesOrder()" data-dismiss="modal">Submit</button>
+											</div>
+											
+										</div>
+								  </form>
+							</div>
+						</div>
+					</div>
+				</div>	
+			
+			<!-- Order Module END -->
+			
+			
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    
+</body>
+
+</html>

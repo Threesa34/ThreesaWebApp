@@ -1,0 +1,23 @@
+
+<input type="file" accept="image/*;capture=camera">
+
+<input type="file" accept="video/*;capture=camcorder">
+<input type="file" accept="audio/*;capture=microphone">
+
+<device type="media" onchange="update(this.data)"></device>
+<video autoplay></video>
+<script>
+  function update(stream) {
+	
+	const video = document.querySelector('video');
+  
+	const hdConstraints = {
+	  video: {width: {min: 1280}, height: {min: 720}}
+	};
+	
+	navigator.mediaDevices.getUserMedia(hdConstraints).
+	  then((stream) => {video.srcObject = stream});
+  
+    //document.querySelector('video').src = stream.url;
+  }
+</script>

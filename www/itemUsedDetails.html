@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+        type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+
+    <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Anguler Js -->
+
+    <script src="angulerjs/angular.js"></script>
+    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/qrcode.js"></script>
+	<script src="angulerjs/qrcode_UTF8.js"></script>
+<script src="angulerjs/angular-qr.js"></script>
+    <script src="angulerjs/appStcok.js"></script>
+
+</head>
+
+<body class="theme-red" ng-app="VendorApp" ng-controller="vendorController">
+    <div class="row text-center" ng-init="getItemDetails()" style="margin-top: 50px;">
+            <div class="col-md-12">
+                <label>Assign Employee: {{poItemUsedDetails[0].username}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Product: {{poItemUsedDetails[0].productname}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Assign Date: {{poItemUsedDetails[0].assigndate | date:'dd/MM/yyyy'}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Purchanse No.: {{poItemUsedDetails[0].poid}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Ceated By: {{poItemUsedDetails[0].createdusername}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Address: <p>{{poItemUsedDetails[0].address}}</p></label>
+            </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<html>
+
+<body onload='myFunction()'>
+<iframe id="MyFrame" style="height:720px;width:1080px" src=""></iframe>
+<script>
+
+var myArr=['http://103.252.7.25:8080/NmConsole/DeviceManagement/DeviceList/DeviceList.asp?DeviceList.nDeviceGroupID=77&DeviceList.oListDevices=111%3Adevice&DeviceList.nMapScrollLeft=0&DeviceList.nMapScrollTop=0','http://103.252.7.25:8080/NmConsole/DeviceManagement/DeviceList/DeviceList.asp?DeviceList.nDeviceGroupID=68&DeviceList.oListDevices=111%3Adevice&DeviceList.nMapScrollLeft=0&DeviceList.nMapScrollTop=0']
+
+var i = 0;
+
+function myFunction() {
+window.setInterval(function(){
+
+  
+     if(i >= myArr.length)
+        i = 0;
+
+     document.getElementById('MyFrame').src= myArr[i]; 
+		i = i +1; 
+         
+
+}, 10000);
+    
+}
+
+
+</script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt.Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	
+	   <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+	  <script src="angulerjs/filesaver.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+	  <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+    <script src="angulerjs/appEntity.js"></script>
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+</head>
+
+<body class="theme-red" ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section ng-app="appEntity" ng-controller="entityController">
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" id="YourElementId" ng-app="appEntity" ng-controller="entityController">
+        <div class="container-fluid" >
+            <div class="block-header">
+                <h2><b>Used Stock Report</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12"><div class="input-group" ng-init="ListArea()">
+											<span class="input-group-addon">
+												<i>Zone:</i>
+											</span>
+										<div class="form-line">
+												<input type="text" class="form-control"  ng-model="zoneid" typeahead="user as user.areaname for user in AreaList | filter:$viewValue" typeahead-on-select="GetStocusedInzone($item.id,selecteduser.id)" placeholder="Search for zone" autofocus/>
+											</div>	
+										</div></div>
+										<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" ng-init="ListUser()">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>User:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="selecteduser" typeahead="user as user.username for user in userList | filter:$viewValue" placeholder="Select User" typeahead-on-select="GetStocusedInzone(zoneid.id,$item.id)" required>
+											</div>
+										</div>
+									</div>
+									
+							<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
+							<input type="search" class="form-control" ng-model="search.customer" placeholder="search"/>
+							<div ng-if="search.customer" class="fa fa-times-circle" id="input_img" ng-click="search.customer = ''"></div>
+							</div>
+				
+				</div>
+				</div>
+				<div class="row">
+				<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+				<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+					<select ng-model="pageSize" class="form-control" ng-options="obj.act as obj.show for obj in Paginationoptionsarr">
+					<option value="" selected disabled>Select</option>
+					</select>
+				</div>
+				
+				<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+					<button type="button" class="btn btn-primary" ng-click="exportData('Used Stock Report.xls')" >Export In Excel</button>
+				</div>
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPageusedstockreport()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= UsedStockRecord.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>	
+				</div>
+				</div>
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<div class="table-responsive" id="exportablenew">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'entityname'; sortReverse = !sortReverse"> <b>Date</b> <span ng-show="sortType= 'entityname' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'entityname' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Product</th>
+							<th class="text-center">Po No.</th>
+							<th class="text-center">Sr No.</th>
+							<th class="text-center">Measure</th>
+							<th class="text-center">Assign Employee</th>
+							<th class="text-center">Assihned By</th>
+						</thead>
+						<tbody ng-init="GetStocusedInzone()">
+							<tr ng-repeat="data in UsedStockRecord | filter:search.customer | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse|filter: {bookno:selectedbookno}">
+								<td class="text-center">{{data.createddate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-left">{{data.productname }}</td>
+								<td class="text-left">{{data.grid}}</td>
+								<td class="text-left">{{data.srno}}</td>
+								<td class="text-left">{{data.measure}}</td>
+								<td class="text-left">{{data.assigntouser}}</td>
+								<td class="text-left">{{data.assignfromuser}}</td>
+							</tr>
+							<tr ng-if="Selectedcollectionid.length > 0"><td><button class="btn btn-danger" ng-click="DeleteSeletectedCollection()">Delete</button></td></tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </section>	
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    
+</body>
+
+</html>

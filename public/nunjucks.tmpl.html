@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Aura Chakra Report</title>
+    <link rel="stylesheet" href="style.css" media="all" />
+	
+
+
+	
+</head>
+<body style="margin-top:200px;font-family:sans-serif;">
+<header class="clearfix">
+  <div style="margin-top:80px;"><br><div> <p style="color:white">hdhdhdhdhdhdhdhdhdhdhdhdhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</p></div></div>
+    <div id="project">
+        <center><img style="width:250px" src="http://103.67.236.187:8394/img/Aura_chakra_logo.png"></center> 
+    </div>
+</header></br></br></br></br>
+
+			
+<main>
+   			</br>
+		
+       <div class="col-sm-12" style="text-align:justify;">
+			
+			<div class="card bg-green col-sm-10" >
+			
+			<form style="" role="form" name="add_member" class="form-horizontal" >
+		<div class="" style="width:100%;margin-left:10%;margin-right:10%;"> 
+		<div style="width:50%;float:left;">
+		<div>
+			<div>
+			<img ng-if="data.photo!='dt-1501567978578-Blank-image.png'" class="img-thumbnail img-responsive" style="height:150px;width:150px;" src="http://103.67.236.187:8394/uploads/{{data.photo}}" alt="">
+			
+			<div style="font-size:18px;margin-left:30%;margin-top:-25%;">
+			<p style="line-height:35px"><b>Name:</b>&nbsp; {{data.customer_name}}</p>
+			<p style="line-height:40px"><b>Email ID:</b>&nbsp;{{data.email}}</p>
+			<p style="line-height:40px"><b>Gender:</b>&nbsp; {{data.gender}}</p>
+			<p style="line-height:45px"> <b>Aura Size:</b>&nbsp; {{data.totalscore}}</p>
+			</div>
+			</div>
+		</div>
+		<br><br>
+		<br><br>
+		
+		
+			 <div class="panel panel-default" style="border:1px solid black;">
+                        <div class="panel-heading" style="border-color:black;height:35px;border-bottom:1px solid black;width:100%;">
+                           <center><b style="font-size:30px;color:black;">Birth Details</b></center>
+                        </div>
+                        <div class="panel-body" style="margin-left:2%;font-size:18px;">
+                            <p style="color:black;"><b>Date:</b>&nbsp; {{data.dob}}</p>
+							<p style="color:black;" ><b>Time:</b>&nbsp;<span> {{data.time}}</span></p>
+							<p style="color:black;"> <b>City:</b>&nbsp; {{data.city}}</p>
+							<p style="color:black;"> <b>State:</b>&nbsp; {{data.state}}</p>
+							<p style="color:black;"> <b>Country:</b>&nbsp; {{data.country}}</p>
+							<p style="color:black;"> <b>Details of Rudraksha/Gems are wearing at present:</b>&nbsp; {{data.details}}</p>
+							<p style="color:black;"> <b>Concerns:</b>&nbsp; {{data.concerns}}</p>
+							<p style="color:black;"> <b>I am {{data.handed}} handed from birth</b>
+                        </div>
+                        
+                    </div>
+
+			</div>
+		<div style="float:right;width:50%;">
+			<div style="position:absolute;margin-top:60px;margin-left:10%;"><img src="http://103.67.236.187:8394/images1/intro-img2.png" style="height:600px;"></div>
+			<div class="col-sm-6" style="position:relative;margin-left:20%;">
+			<p style="height:50px;font-size:18px;"><b>Chakra</b><b style="margin-left:58px;font-size:18px;">Score</b></p>
+			<span style="height:50px;"><img style="width:70px;height:70px;margin-top:-15px" title="Sahasrara Chakra" src="http://103.67.236.187:8394/img/chakra/Sahasrara.png"/><span style="margin-left:50px;position:absolute;top:75px;"><b>{{data.step7}}%</b></span></span>
+			<p style="height:50px;"><img style="width:70px;height:70px;margin-top:-38px" title="Ajana Chakra" src="http://103.67.236.187:8394/img/chakra/Ajana.png"><b style="margin-left:50px;position:absolute;top:135px;z-index:5%;">{{data.step6}}%</b></p>
+			<p style="height:50px;"><img style="width:70px;height:70px;margin-top:-30px" title="Vishuddha Chakra" src="http://103.67.236.187:8394/img/chakra/Vishuddha.png"><b style="margin-left:50px;position:absolute;top:205px;z-index:5%;">{{data.step5}}%</b></p>
+			<p style="height:50px;"><img style="width:70px;height:70px;" title="Anahata Chakra" src="http://103.67.236.187:8394/img/chakra/Anahata.png"><b style="margin-left:50px;position:absolute;top:300px;z-index:5%;">{{data.step4}}%</b></p>
+			<p style="height:50px;"><img style="width:70px;height:70px;margin-top:30px" title="Manipura Chakra" src="http://103.67.236.187:8394/img/chakra/Manipura.png"><b style="margin-left:50px;position:absolute;top:400px;z-index:5%;">{{data.step3}}%</b></p>
+			<p style="height:50px;"><img style="width:70px;height:70px;margin-top:50px" title="Swadhishthan Chakra" src="http://103.67.236.187:8394/img/chakra/Swadhishthan-1.png"><b style="margin-left:50px;position:absolute;top:480px;z-index:5%;">{{data.step2}}%</b></p>
+			<p style="height:50px;"><img style="width:70px;height:70px;margin-top:70px" title="Muladhara Chakra" src="http://103.67.236.187:8394/img/chakra/Muladhara-1.png"><b style="margin-left:50px;position:absolute;top:565px;z-index:5%;">{{data.step1}}%</b></p>
+			
+			</div></div>
+			
+			</div>
+			
+	
+        </div></form>	
+		
+		</div>
+				
+</main>
+
+<footer>
+
+</footer>
+</body>
+</html>

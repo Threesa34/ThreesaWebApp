@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+	  <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-all.min.js"></script>
+    <script src="angulerjs/appEntity.js"></script>
+	
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+	<script>
+        
+         function readURL(input) {
+             
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.image')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(200);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }	
+
+		function readURLPDF(input) {
+             
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.pdffile')
+                        .attr('data', e.target.result)
+                        .width(350)
+                        .height(600);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }	
+				</script>
+</head>
+
+<body class="theme-red" id="YourElementId" ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars   <select ng-model="selectedmonth" ng-options="obj.id as obj.monthname for obj in monthsarr" class="form-control" ng-change="getemployeesalary(selectedmonth)"><option value="" selected disabled>Select Month</option></select> -->
+	<section ng-app="appEntity" ng-controller="entityController as maycontroller">
+     <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" ng-app="appEntity" ng-controller="entityController as maycontroller">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Salary Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6"><input type="month" ng-model="selectedmonth" class="form-control" ng-change="getemployeesalary(selectedmonth)"/></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				
+				
+				
+			
+				
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title text-center"> </h4>
+						</div>
+							<div class="modal-body">
+								  <div class="table-responsive" id="exportablenew">
+								  <table class="table">
+									<tr><td class="text-center" colspan="4">Salary Slip for the month of  {{getMonthname(SalaryDetails[0].month)}}</td></tr>
+									<tr><td class="text-center" colspan="4"><h4>Threesa Infoway Pvt Ltd</h4>
+									<h6>Shop No 4, 1st Floor, Anand Ram Laghu Sankul, Near Siddhanchalb Ph V, Vasant Vihar, Thane(W)</h6>
+									</td></tr>
+									<tr style="white-space:nowrap;">
+									<td>Employee Name</td>
+									<td>{{SalaryDetails[0].fullname}}</td>
+									<td>Salary Date</td>
+									<td>{{fromcurrentdate | date:'dd/MM/yyyy'}}</td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td>Designation</td>
+									<td>{{SalaryDetails[0].designation}}</td>
+									<td>Joining Date</td>
+									<td>{{SalaryDetails[0].joiningdate | date:'dd/MM/yyyy'}}</td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td>Department</td>
+									<td>{{SalaryDetails[0].department}}</td>
+									<td>Salary</td>
+									<td>{{SalaryDetails[0].salary | number:2}}</td>
+									</tr>
+									
+									<tr style="white-space:nowrap;">
+									<td>Working Days</td>
+									<td>{{SalaryDetails[0].workingdays}}</td>
+									<td>Present Days</td>
+									<td>{{SalaryDetails[0].presentdays + (SalaryDetails[0].halfdays/2) + SalaryDetails[0].thursdays}}</td>
+									</tr>
+									
+									<tr style="white-space:nowrap;">
+									<td colspan="2"><h4>Earnings</h4></td>
+									<td class="text-center"><h4>Scale</h4></td>
+									<td class="text-center"><h4>Amount</h4></td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td colspan="2">
+									<ul style="list-style-type:none;">
+									<li>Basic</li>
+									<li>Traveling Exp.</li>
+									<li>Mobile Exp.</li>
+									<li>Misc Exp.</li>
+									<li>Advance</li>
+									<li>Loan Installments</li>
+									</ul>
+									</td>
+									<td class="text-right">
+									<ul style="list-style-type:none;">
+									<li>{{SalaryDetails[0].salary | number:2}}</li>
+									<li>{{SalaryDetails[0].travel_exp | number:2}}</li>
+									<li>{{SalaryDetails[0].mobile_exp | number:2}}</li>
+									<li>{{SalaryDetails[0].other_exp | number:2}}</li>
+									<li>{{SalaryDetails[0].advance | number:2}}</li>
+									<li></li>
+									<li></li>
+									</ul>
+									</td>
+									<td class="text-right">
+									<ul style="list-style-type:none;">
+									<li>{{SalaryDetails[0].totalsal | number:2}}</li>
+									<li><span style="visibility: hidden;">0</span></li>
+									<li><span style="visibility: hidden;">0</span></li>
+									<li><span style="visibility: hidden;">0</span></li>
+									<li>{{SalaryDetails[0].payamt | number:2}}</li>
+									<li>{{SalaryDetails[0].loaninst| number:2}}</li>
+									</ul>
+									</td>
+									</tr>
+									<tr style="white-space:nowrap;">
+									<td colspan="2"><h4>Total</h4></td>
+									<td class="text-right">{{SalaryDetails[0].salary | number:2}}</td>
+									<td class="text-right"><h4>{{totalsal | number:2}}</h4></td>
+									</tr>
+									<tr>
+										<td colspan="4">Amt. in Words:&nbsp; {{amtinstr}} </td>
+									</tr>
+								  </table>
+								  </div>
+							</div>
+												<div class="modal-footer">
+							
+										<div class="input-group">
+											<center class="">
+												<button class="btn btn-info" data-dismiss="modal">Close</button>
+												
+												<button class="btn btn-success" onclick="javascript:printDiv('exportablenew')" >Print</button>
+											</center>
+										</div>
+										</div>
+										<script language="javascript" type="text/javascript">
+        function printDiv(exportablenew) {
+		 for(var i =0 ;i<document.getElementsByTagName("tr").length;i++)
+    {
+    	document.getElementsByTagName("tr")[i].style.border="1px solid black";
+    }
+	for(var i =0 ;i<document.getElementsByTagName("td").length;i++)
+    {
+    	document.getElementsByTagName("td")[i].style.border="1px solid black";
+    }
+            //Get the HTML of div
+            var divElements = document.getElementById(exportablenew).innerHTML;
+            //Get the HTML of whole page
+             var oldPage = document.body.innerHTML; 
+
+            //Reset the page's HTML with div's HTML only
+             document.body.innerHTML = "<br><br><br><br>"+divElements; 
+
+            //Print Page
+            window.print();
+
+            //Restore orignal HTML
+            document.body.innerHTML = oldPage; 
+			location.reload();
+          
+        }
+    </script>
+
+										
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= employeesalarydetails.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<!-- <th class="text-center">Username</th> -->
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'username'; sortReverse = !sortReverse"> <b>Full Name</b> <span ng-show="sortType= 'username' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'username' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Working Days</th>
+							<th class="text-center">Present Days</th>
+							<!-- <th class="text-center">Latemarks</th> -->
+							<!-- <th class="text-center">Half Days</th> -->
+							<th class="text-center">Basic Salary</th>
+							 <!-- <th class="text-center">Total Salary</th>  -->
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="getemployeesalary(fromcurrentdate)">
+							<tr ng-repeat="data in employeesalarydetails | filter:search.name | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-left">{{data.fullname}}</td>
+								<td class="text-left">{{data.workingdays}}</td>
+								<td class="text-left">{{data.presentdays + data.thursdays}}</td>
+								
+								<!-- <td class="text-left">{{data.Latemarks}}</td> -->
+								
+								<!-- <td class="text-left">{{data.halfdays}}</td> -->
+								<td class="text-right">{{data.salary | number:2}}</td>
+								 <!-- <td class="text-right">{{data.totalsal = (data.presentdays + data.thursdays) * data.perdaysal | number:2}}</td>  -->
+								<td class="text-center"><a class="btn btn-warning" ng-click="getSalarydataData(selectedmonth,data.id)" data-toggle="modal" data-target="#myModalEdit">View</a></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+	
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+	
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+
+    
+</body>
+
+</html>

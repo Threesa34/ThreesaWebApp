@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="angulerjs/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+   
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	
+	  <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+    <script src="angulerjs/appEntity.js"></script>
+	
+</head>
+
+<body class="theme-red"  ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section ng-app="appEntity" ng-controller="entityController as maycontroller">
+       <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" id="YourElementId" ng-app="appEntity" ng-controller="entityController as maycontroller">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Products Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalUpload">Upload Products</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				
+				
+				<div class="modal fade" id="myModalUpload" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Upload Products</h4>
+						</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="col-md-4">
+											<a href="./files/MaterialDetails.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i></a>
+										</div>
+										<div class="col-md-4 pull-right">
+										
+											<div class="file_input_div">
+											<div class="file_input">
+											  <label class="image_input_button mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+												<i style="border:1px solid gray;" class="btn">Choose File</i>
+												<input id="xlf" class="none" type="file"/>
+											  </label>
+											</div>
+										  </div>
+                
+											</div>
+											<div class="col-md-12">
+												<div class="col-md-4 pull-right">
+													<button class="btn btn-primary" onclick="myFunction()" data-dismiss="modal">Submit</button>
+													<button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+						</div>
+				</div>
+				
+				
+				
+				
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New Product</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Addproduct">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="material.name" placeholder="Name" required autofocus>
+											</div>
+										</div>
+										<div class="col-md-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Minimum purchase Qty.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="material.minpoqty" placeholder="Minimum Purchase Qty">
+											</div>
+										</div>
+										</div>
+										<div class="col-md-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Maximum purchase Qty.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="material.maxpo" placeholder="Maximum Purchase Qty" >
+											</div>
+										</div>
+										</div>
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Addproduct.$invalid" ng-click="AddNewItem()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Edit Products</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Editproducts" ng-repeat="material in ItemDetails">
+								  <div class="input-group">
+											<span class="input-group-addon">
+												<i>Name:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="material.name" placeholder="Name" required autofocus>
+											</div>
+										</div>
+										<div class="col-md-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Minimum purchase Qty.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="material.minpoqty" placeholder="Minimum Purchase Qty">
+											</div>
+										</div>
+										</div>
+										<div class="col-md-12">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Maximum purchase Qty.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="material.maxpo" placeholder="Maximum Purchase Qty" >
+											</div>
+										</div>
+										</div>
+										
+										
+										
+										
+										<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Editproducts.$invalid" ng-click="UpdateItemDetails()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= ProductList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>						
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th><center><input type="checkbox" id="allselecdt" ng-change="syncforMaterialdelete(bool,ItemsListing)" ng-model="bool" ng-checked="isCheckedMaterialdelete(ItemsListing)"> <label for="allselecdt">Select All</label></center></th>
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'name'; sortReverse = !sortReverse"> <b>Name</b> <span ng-show="sortType= 'name' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'name' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Minimum purchase Qty.</th>
+							<th class="text-center">Maximum Purchase Qty.</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="ItemsList()">
+							<tr ng-repeat="data in ItemsListing | filter:search.name | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-center"><input type="checkbox" id="{{$index}}" ng-change="syncforMaterialdelete(bool,data)" ng-model="bool" ng-checked="isCheckedMaterialdelete(data)"> <label for="{{$index}}"></label></td>
+								<td class="text-left">{{data.name}}</td>
+								<td class="text-left">{{data.minpoqty}}</td>
+								<td class="text-left">{{data.maxpo}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="getItemData(data.id)" data-toggle="modal" data-target="#myModalEdit">Edit</a> | <a class="btn btn-danger" ng-click="DeleteProduct(data.id)">Delete</a></td>
+							</tr>
+							<tr ng-if="SelectedProductsid.length > 0"><td><button class="btn btn-danger" ng-click="DeleteSelectedItems()">Delete</button></td></tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+	
+<script>
+          var X = XLSX;
+     
+
+function saveTextAsFile(errtxt,errfile)
+					{    
+		
+					
+						var textToSaveAsBlob = new Blob([errtxt], {type:"text/plain"});
+						var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+						var fileNameToSaveAs = errfile;
+					 
+						var downloadLink = document.createElement("a");
+						downloadLink.download = fileNameToSaveAs;
+						downloadLink.href = textToSaveAsURL;
+						document.body.appendChild(downloadLink);
+
+						downloadLink.click();
+						
+						location.reload();
+					
+					}
+        function to_json(workbook) {
+            var result = {};
+			var data2pass = {};
+            workbook.SheetNames.forEach(function(sheetName) {
+                var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+				var len = workbook.SheetNames.length;
+                 if (roa.length > 0) {
+                    result[sheetName] = roa;
+					angular.element(document.getElementById('YourElementId')).scope().UploadItems(roa);
+				}
+                   
+            });
+            return result;
+        }
+
+        function process_wb(wb) {
+            var output = "";
+            output = JSON.stringify(to_json(wb), 2, 2);
+        }
+			
+			var xlf = document.getElementById('xlf');
+			
+			
+			var data = 0; 
+			
+			var  prevevent = {};
+			function myeventnew(eee) {
+				  prevevent = eee;
+			}
+			
+			function myFunction() {
+				 var files = prevevent.target.files; 
+					var f = files[0];
+					var reader = new FileReader();
+					var name = f.name;
+					reader.onload = function(prevevent) {
+						var data = prevevent.target.result;
+						var wb;
+							wb = X.read(data, {
+							type: 'binary'
+							});
+							process_wb(wb);
+					};
+            reader.readAsBinaryString(f);
+
+			}
+			
+			
+				function handleFile(e) {
+				var ee = e;
+				if(ee)
+					{myeventnew(ee);}
+			
+				
+		} 
+
+		 
+
+        if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+    </script>
+	
+	
+	
+   <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+	
+	
+</body>
+
+</html>

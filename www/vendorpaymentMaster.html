@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+   
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	 <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appVendors.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="VendorApp" ng-controller="vendorController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section >
+      <div  ng-include="'Mainmenu.html'"></div>
+    </section>
+
+    <section class="content" >
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Vendor's Payments Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Payment Record Add</h4>
+										
+						</div>
+							<div class="modal-body">
+								  <form name="Addpayment">	
+									<div class="row">
+									<div class="col-md-12">
+									<div class="col-md-6">
+											<span class="col-md-3">
+												<i>Vendor:</i>
+											</span>
+											<div class="col-md-6" ng-init="VendorList()">
+												<select ng-model="Vendor" class="form-control" ng-options="obj.id as obj.name for obj in VendorListing" ng-change="getPoOnVendorfromgr(Vendor)">
+												<option value="" selected disabled>-- SELECT --</option>
+												</select>
+											</div>
+									</div>
+									<div class="col-md-6">
+											<span class="col-md-4">
+												<i>Purchase. ID:</i>
+											</span>
+											<div class="col-md-6">
+												<select ng-model="grid" class="form-control" ng-options="obj.id as obj.poid for obj in gronvendors" ng-change="getAmountDetailsOnGr(grid)">
+												<option value="" selected disabled>-- SELECT --</option>
+												</select>
+											</div>
+									</div>
+									</div>
+										</div>
+										<hr style="background-color:black;">
+									<div>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="col-md-4"><b>GR No.: &nbsp; {{PaymentdetailsOnGr[0].id}}</b></div>
+												
+												<div class="col-md-4"><b>Date: &nbsp; {{PaymentdetailsOnGr[0].createddate | date:'dd/MM/yyyy'}}</b></div>
+												
+												<div class="col-md-4"><b>Invoice No.: &nbsp; {{PaymentdetailsOnGr[0].invoiceno}}</b></div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="col-md-4"><b>Total Ptroducts: &nbsp; {{PaymentdetailsOnGr[0].totalproducts}}</b></div>
+												
+												<div class="col-md-4"><b>Gross Amount: &nbsp; {{PaymentdetailsOnGr[0].grossamount | number:2}} /-</b></div>
+												
+												<div class="col-md-4"><b>Tax Amount.: &nbsp; {{PaymentdetailsOnGr[0].taxamount | number:2}} /-</b></div>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-12">
+												
+												<div class="col-md-4 pull-right"><h4><b>Net Amount.: &nbsp; {{PaymentdetailsOnGr[0].netamount | number:2}} /-</b></h4></div>
+											</div>
+										</div>
+										<hr style="background-color:black;">
+										<div class="row"><div class="col-md-12"><span class="pull-right"><a href="#" ng-click="table = true;pay = false;" style="text-decoration:none;"><b>Veiw Products Details</b></a></span></div></div>
+										<div class="row">
+											<div class="col-md-12">
+											<div class="table-responsive" ng-show="table">
+											<table class="table">
+											<thead>
+											<th class="text-center">Product</th>
+											<th class="text-center">Qty.</th>
+											<th class="text-center">Po.Rate</th>
+											<th class="text-center">Tax</th>
+											<th class="text-center">Amount</th>
+											</thead>
+											<tbody>
+											<tr ng-repeat="payment in PaymentdetailsOnGr">
+											<td>{{payment.productname}}</td>
+											<td class="text-center">{{payment.qty}}</td>
+											<td class="text-right">{{payment.porate | number:2}}</td>
+											<td class="text-right">{{payment.taxamt = payment.porate * payment.qty * payment.taxper | number:2}}</td>
+											<td class="text-right">{{payment.netvalue + payment.taxamt | number:2}}</td>
+											</tr>
+											</tbody>
+											</table>
+											<div class="col-md-12"><button class="btn btn-primary" ng-click="table = false;pay = true;">Close</button></div>
+											</div>
+												<div ng-show="pay">
+													<div class="demo-radio-button">
+                                <input name="group4" type="radio" id="radio_7" class="radio-col-red"  ng-click="PaymentdetailsOnGr[0].paymentmode = 'Cash'" checked />
+                                <label for="radio_7">Cash Pay</label>
+                                <input name="group4" type="radio" id="radio_8" class="radio-col-red" ng-click="PaymentdetailsOnGr[0].paymentmode = 'Cheque'"/>
+                                <label for="radio_8">Cheque Pay</label>
+								<input name="group4" type="radio" id="radio_NEFT" class="radio-col-red" ng-click="PaymentdetailsOnGr[0].paymentmode = 'NEFT'"/>
+                                <label for="radio_NEFT">NEFT</label>
+								</div>
+								
+						<div ng-if="PaymentdetailsOnGr[0].paymentmode =='Cash' || PaymentdetailsOnGr[0].paymentmode =='NEFT'">
+							<div class="col-md-6">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Paid Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].paidamount" placeholder="Paid Amount" required autofocus>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Pending Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].pendingamount = PaymentdetailsOnGr[0].netamount - PaymentdetailsOnGr[0].paidamount | number:2" placeholder="Pending Amount" readonly>
+											</div>
+										</div>
+										</div>
+										<div class="row" ng-if="PaymentdetailsOnGr[0].paymentmode =='NEFT'">
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Transaction ID:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].transactionid" placeholder="Transaction ID">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Transaction Date:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="PaymentdetailsOnGr[0].transactiondate">
+											</div>
+										</div>
+										</div>
+										</div>
+						</div>
+						<div ng-if="PaymentdetailsOnGr[0].paymentmode =='Cheque'">
+						
+						<div class="col-md-4">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Chq.No.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].chqno" placeholder="Cheque No.">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Chq.Date.:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="PaymentdetailsOnGr[0].chqdate" placeholder="Cheque No.">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Bank & Branch:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].bank" placeholder="Bank & Branch">
+											</div>
+										</div>
+										</div>
+						<div class="col-md-6">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Paid Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].paidamount" placeholder="Paid Amount" required autofocus>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Pending Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].pendingamount = PaymentdetailsOnGr[0].netamount - PaymentdetailsOnGr[0].paidamount | number:2" placeholder="Pending Amount" readonly>
+											</div>
+										</div>
+										</div>
+						</div>
+								
+								
+												</div>
+											</div>
+										</div>
+									</div>
+										<div class="row">
+											<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Recieved By:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PaymentdetailsOnGr[0].recievedby" placeholder="Recieved By">
+											</div>
+										</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-md-12">
+										<div class="col-md-3 pull-right"><button class="btn btn-success" ng-click="Addvendorpayment()">Submit</button></div>
+										</div>
+										</div>
+								  </form>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Update Payment Details</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Editpayment">
+									<div class="row">
+									<div class="col-md-12">
+									<div class="col-md-6">
+											<h5><b>Vendor: &nbsp;{{vendorpayDetails[0].vendorname}}</b></h5>
+									</div>
+									<div class="col-md-6">
+											<h5><b>GR.No.: &nbsp;{{vendorpayDetails[0].poid}}</b></h5>
+									</div>
+									</div>
+										</div>
+										<hr style="background-color:black;">
+									<div>
+										<div class="row">
+											<div class="col-md-12">
+												
+												<div class="col-md-4"><b>Invoice Date: &nbsp; {{vendorpayDetails[0].grinvoicedatestr}}</b></div>
+												
+												<div class="col-md-4"><b>Invoice No.: &nbsp; {{vendorpayDetails[0].grinvoiceno}}</b></div>
+												
+												<div class="col-md-4"><b>Amount: &nbsp; {{vendorpayDetails[0].amount | number:2}} /-</b></div>
+											</div>
+										</div>
+										</div>
+										
+										<hr style="background-color:black;">
+									<div>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="col-md-4"><b>Payment Mode: &nbsp; {{vendorpayDetails[0].paymentmode}}</b></div></div>
+											<div class="col-md-12">
+												<div class="col-md-4" ng-if="vendorpayDetails[0].paymentmode == 'Cheque'">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Chq.No.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].chqno" placeholder="Cheque No.">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4" ng-if="vendorpayDetails[0].paymentmode == 'Cheque'">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Chq.Date.:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="vendorpayDetails[0].chqdate" placeholder="Cheque No.">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4" ng-if="vendorpayDetails[0].paymentmode == 'Cheque'">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Bank & Branch:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].bank" placeholder="Bank & Branch">
+											</div>
+										</div>
+										</div>
+						<div class="col-md-6">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Paid Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].paidamount" placeholder="Paid Amount" ng-change="vendorpayDetails[0].bal = vendorpayDetails[0].amount - vendorpayDetails[0].paidamount" required autofocus>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Pending Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" ng-focus="vendorpayDetails[0].pendingamount = vendorpayDetails[0].bal" class="form-control" ng-model="vendorpayDetails[0].pendingamount | number:2" placeholder="Pending Amount" readonly>
+											</div>
+										</div>
+										</div>
+										<div ng-if="vendorpayDetails[0].totalpaidamt != vendorpayDetails[0].amount">
+										<div class="col-md-12"><b>Paid Pending Amount</b></div>
+										
+										
+										<div class="demo-radio-button">
+                                <input name="group45" type="radio" id="radio_75" class="radio-col-red"  ng-click="vendorpayDetails[0].paymentmodenew = 'Cash'" checked />
+                                <label for="radio_75">Cash Pay</label>
+                                <input name="group45" type="radio" id="radio_85" class="radio-col-red" ng-click="vendorpayDetails[0].paymentmodenew = 'Cheque'"/>
+                                <label for="radio_85">Cheque Pay</label>
+
+								<input name="group45" type="radio" id="radio_86" class="radio-col-red" ng-click="vendorpayDetails[0].paymentmodenew = 'NEFT'"/>
+                                <label for="radio_86">NEFT</label>
+								</div>
+								
+						
+							
+						<div ng-show="vendorpayDetails[0].paymentmodenew =='Cheque'">
+						
+						<div class="col-md-4">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Chq.No.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].chqnonew" placeholder="Cheque No.">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Chq.Date.:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="vendorpayDetails[0].chqdatenew" placeholder="Cheque No.">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-4">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Bank & Branch:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].banknew" placeholder="Bank & Branch">
+											</div>
+										</div>
+										</div>
+								</div>
+							
+										
+										
+										<div class="col-md-6">
+							<div class="input-group">
+											<span class="input-group-addon">
+												<i>Paid Amount:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].paidamountnew" placeholder="Paid Amount" ng-blur="vendorpayDetails[0].totalpendingamt = vendorpayDetails[0].totalpendingamt - vendorpayDetails[0].paidamountnew" >
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Pending Amount:</i>
+											</span>
+											<div class="form-line">
+							<input type="text" class="form-control" ng-model="vendorpayDetails[0].totalpendingamt| number:2" placeholder="Pending Amount" readonly>
+											</div>
+										</div>
+										</div>
+										
+										
+										<div class="row" ng-if="vendorpayDetails[0].paymentmodenew =='NEFT'">
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Transaction ID:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].transactionid" placeholder="Transaction ID">
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Transaction Date:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="vendorpayDetails[0].transactiondate">
+											</div>
+										</div>
+										</div>
+										</div>
+										
+										</div>
+										
+											</div>
+										</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Recieved By:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="vendorpayDetails[0].recievedby" placeholder="Recieved By">
+											</div>
+										</div>
+										</div>
+										</div>
+										
+										<div class="row">
+										<div class="col-md-12">
+										<div class="col-md-3 pull-right"><button class="btn btn-success" ng-click="EditpaymentDetails()">Submit</button></div>
+										</div>
+										</div>
+										
+								  </form>
+							</div>
+						</div>
+					</div>
+				</div>	
+				</div>	
+				
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= vendorpaymentList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>				
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-init="ListvendorsPaymets()">
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<!-- <th class="text-center">GR.Date</th> -->
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'createddate'; sortReverse = !sortReverse"> <b>Payment Date</b> <span ng-show="sortType= 'createddate' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'createddate' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">Vendor Name</th>
+							<th class="text-center">Invoice No.</th>
+							<th class="text-center">Invoice Date</th>
+							<th class="text-center">Payment Mode</th>
+							<th class="text-center">Total Amount</th>
+							<th class="text-center">Paid Amount</th>
+							<th class="text-center">Balance Amount</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody  ng-repeat="data in vendorpaymentList | filter:search.name | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse" data-ng-switch on="PaymentDataCollapse[$index]">
+							<tr data-ng-click="GetVendorsPaymentsPoviseDetails($index,data.poid)">
+								<td class="text-center">{{data.createddate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-left">{{data.vendorname}}</td>
+								<td class="text-left">{{data.grinvoiceno}}</td>
+								<td class="text-center">{{data.grinvoicedate| date:'dd/MM/yyyy'}}</td>
+								<td class="text-center">{{data.paymentmode}}</td>
+								<td class="text-right">{{data.amount | number:2}}</td>
+								<td class="text-right">{{data.totalpaidamt | number:2}}</td>
+								<td class="text-right">{{data.totalpendingamt | number:2}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="getPaymentDetails(data.id)" data-toggle="modal" data-target="#myModalEdit">Edit</a>|<a class="btn btn-danger" ng-click="Deletevendorpayment(data.id)">Delete</a></td>
+							</tr>
+							
+					<tr data-ng-switch-when="true" ng-if="PovisePaymentsDetails.length > 0">
+						<td colspan="9">
+                                    <table class="table table-bordered" >
+                                        <thead class="levelTwo" style="background-color:#00FFFF">
+                                            <tr>
+									<th class="text-left">#</th>
+									<th class="text-center">Payment Date</th>
+									
+									<th class="text-center">Payment Mode</th>
+							<th class="text-center">Paid Amount</th>
+							<th class="text-center">Paid By</th>
+							<th class="text-center">Recieved By</th>
+							<th class="text-center"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="data in PovisePaymentsDetails">
+                                            <tr>
+                                                <td>{{$index +1}}</td>
+												<td class="text-center">{{data.createddate | date:'dd/MM/yyyy'}}</td>
+                                               <td class="text-center">{{data.paymentmode}}</td>
+								<td class="text-right">{{data.paidamount | number:2}}</td>
+								<td class="text-left">{{data.paidby}}</td>
+								<td class="text-left">{{data.recievedby}}</td>
+								<td class="text-center"><button class="btn btn-danger" ng-click="DeleteSubPayment(data.id,data.poid)">Delete</button></td>
+                                    </tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+	
+
+    
+</body>
+
+</html>

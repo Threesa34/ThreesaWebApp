@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="angulerjs/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	
+	  <script src="angulerjs/angular.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="angulerjs/appVendors.js"></script>
+	
+</head>
+
+<body class="theme-red" ng-app="VendorApp" ng-controller="vendorController">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section >
+        <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" >
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2><b>Purchase's Details</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalPOAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.po" placeholder="search"/>
+				<div ng-if="search.po" class="fa fa-times-circle" id="input_img" ng-click="search.po = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				
+				<div class="modal fade" id="myModalPOAdd" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New Purchase Order</h4>
+						</div>
+							<div class="modal-body">
+								<div class="row">
+									<form name="poorder">
+										<div class="row">
+											<div class="col-md-4 ">
+										<div class="input-group" ng-init="VendorList();ItemsList();">
+											<span class="input-group-addon">
+												<i>Vendor:</i>
+											</span>
+											<div class="form-line">
+												<select  class="form-control" ng-model="ProductsForPO[0].vendor"  ng-options="obj.id as obj.name for obj in VendorListing" required>
+												<option value="" selected disabled>Select Vendor</option>
+												</select>
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-8 ">
+										<div class="input-group">
+											<div class="row">
+											<div class="col-md-4 col-sm-4 col-xs-12">
+											<span class="input-group-addon">
+												<i>Gross Amount: &nbsp;{{grsamt | number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+											<span class="input-group-addon">
+												<i>Tax Amount: &nbsp; {{taxamt| number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+											<span class="input-group-addon">
+												<i>Net Amount: &nbsp;{{netamt| number:2}}</i>
+											</span>
+										</div>
+										</div>
+										</div>
+										</div>
+										</div>
+										<div class="row">
+										<div class="col-md-6">
+											<div class="input-group">
+											<span class="input-group-addon">
+												<i>Invoice No.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="ProductsForPO[0].invoiceno" placeholder="Invoice No." required>
+											</div>
+									</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Invoice Date:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="ProductsForPO[0].invoicedate" required/>
+											</div>
+										</div>
+										
+										</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 col-xs-12 col-sm-12">
+											<div class="table-responsive">
+												<table class="table table-borderd table-striped">
+													<thead>
+														<th>#</th>
+														<th>Product</th>
+														<th>PO Rate</th>
+														<!-- <th>GST <small>cgst + sgst</small></th> -->
+														<th>Qty.</th>
+														<th>Measure</th>
+														<th>Amount</th>
+													</thead>
+													<tbody>
+														<tr ng-repeat="data in ProductsForPO">
+															<td><a href="" ng-click="RemovePoPrduct(data,$index)"><i class="fa fa-minus-circle text-danger" aria-hidden="true"></i></a> {{$index +1}}</td>
+															<td>
+																<div class="form-line">
+																<input type="text" class="form-control" ng-model="data.product" typeahead="obj as obj.name for obj in ItemsListing | filter:$viewValue" typeahead-on-select="getreleventDat(data)" placeholder="Product" required>
+															</div>
+															</td>
+															<td>
+																<div class="form-line">
+																<input type="number" class="form-control" ng-model="data.porate" placeholder="Purchase Rate" ng-blur="calculategroass($index)">
+															</div>
+															</td>
+															
+															<!-- <td class="text-right">
+																{{data.product.cgst + data.product.sgst}} ({{data.product.cgst}} + {{data.product.sgst}})
+															</td> -->
+															<td>
+																<div class="form-line">
+																<input type="number" class="form-control" ng-model="data.qty" placeholder="Quantity" ng-blur="calculategroass($index)"><br>
+																<small>{{data.product.productstype}}</small>
+															</div>
+															</td>
+															<td>
+																<div class="form-line">
+																<input type="number" class="form-control" ng-model="data.measure" placeholder="Measure" ng-blur="calculategroass($index)"><br>
+															</div>
+															</td>
+															<td class="text-right"> <span ng-if="CalculateProductAmount(data)">{{(data.amount = CalculateProductAmount(data) |number:2 ) || "0.00"}} </span></td>
+														</tr>
+														<tr>
+															<td>
+																<button class="btn btn-primary" ng-click="AddNewRowPO()">Add Row</button>
+															</td>
+															
+															<td style="white-space:nowrap">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i>CGST</i>
+															</span>
+															<div class="form-line">
+															 <input type="number" class="form-control" ng-model="ProductsForPO[0].cgst" placeholder="CGST" ng-blur="calculatGST(ProductsForPO[0])"></div></div>	
+															</td>
+															<td  style="white-space:nowrap">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i>SGST</i>
+															</span>
+															<div class="form-line">
+															<input type="number" class="form-control" ng-model="ProductsForPO[0].sgst" placeholder="SGST" ng-blur="calculatGST(ProductsForPO[0])">	</div></div>
+															</td>
+															<td  style="white-space:nowrap">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i>IGST</i>
+															</span>
+															<div class="form-line">
+															<input type="number" class="form-control" ng-model="ProductsForPO[0].igst" placeholder="SGST" ng-blur="calculatGST(ProductsForPO[0])">	</div>	</div>
+															</td>
+														</tr>
+														
+													</tbody>
+												</table>
+											</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-success" ng-click="SavePurchaseOrder()">Submit</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				
+					<div class="modal fade" id="myModalPOEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Update Purchase Order</h4>
+						</div>
+							<div class="modal-body">
+								<div class="row">
+									<form name="poorder">
+										<div class="row">
+											<div class="col-md-4 ">
+										<div class="input-group" ng-init="VendorList();ItemsList();">
+											<span class="input-group-addon">
+												<i>Vendor:</i>
+											</span>
+											<div class="form-line">
+												<select  class="form-control" ng-model="PurchaseDetails[0].vendor"  ng-options="obj.id as obj.name for obj in VendorListing" required>
+												<option value="" selected disabled>Select Vendor</option>
+												</select>
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-8 ">
+										<div class="input-group">
+											<div class="row">
+											<div class="col-md-4 col-sm-4 col-xs-12">
+											<span class="input-group-addon">
+												<i>Gross Amount: &nbsp;{{PurchaseDetails[0].grossamount | number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+											<span class="input-group-addon">
+												<i>Tax Amount: &nbsp; {{PurchaseDetails[0].taxamount| number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+											<span class="input-group-addon">
+												<i>Net Amount: &nbsp;{{PurchaseDetails[0].netamount| number:2}}</i>
+											</span>
+										</div>
+										</div>
+										</div>
+										</div>
+										</div>
+										
+										<div class="row">
+										<div class="col-md-6">
+											<div class="input-group">
+											<span class="input-group-addon">
+												<i>Invoice No.:</i>
+											</span>
+											<div class="form-line">
+												<input type="text" class="form-control" ng-model="PurchaseDetails[0].invoiceno" placeholder="Invoice No." required>
+											</div>
+									</div>
+										</div>
+										<div class="col-md-6">
+										<div class="input-group" >
+											<span class="input-group-addon">
+												<i>Invoice Date:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="PurchaseDetails[0].invoicedate" required/>
+											</div>
+										</div>
+										
+										</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-12 col-xs-12 col-sm-12">
+											<div class="table-responsive">
+												<table class="table table-borderd table-striped">
+													<thead>
+														<th>#</th>
+														<th>Product</th>
+														<th>PO Rate</th>
+														<!-- <th>GST <small>cgst + sgst</small></th> -->
+														<th>Qty.</th>
+														<th>Measure</th>
+														<th>Amount</th>
+													</thead>
+													<tbody>
+														<tr ng-repeat="data in PurchaseDetails">
+															<td><a href="" ng-click="RemovePoPrductAtEdit($index,data)"><i class="fa fa-minus-circle text-danger" aria-hidden="true"></i></a> {{$index +1}}</td>
+															<td>
+																<div class="form-line">
+																<input type="text" class="form-control" ng-model="data.product" typeahead="obj as obj.name for obj in ItemsListing | filter:$viewValue" typeahead-on-select="getreleventDat(data)" placeholder="Product" >
+															</div>
+															</td>
+															<td>
+																<div class="form-line">
+																<input type="number" class="form-control" ng-model="data.porate" placeholder="Purchase Rate" ng-blur="calculategroassEdit($index)">
+															</div>
+															</td>
+															
+															<!-- <td class="text-right">
+																{{data.cgst + data.sgst}} ({{data.cgst}} + {{data.sgst}})
+															</td> -->
+															<td>
+																<div class="form-line">
+																<input type="number" class="form-control" ng-model="data.qty" placeholder="Quantity" ng-blur="calculategroassEdit($index)"><br>
+																<small>{{data.productstype}}</small>
+															</div>
+															</td>
+																<td>
+																<div class="form-line">
+																<input type="number" class="form-control" ng-model="data.measure" placeholder="Measure" ng-blur="calculategroassEdit($index)"><br>
+															</div>
+															</td>
+															<td class="text-right">{{(data.netvalue = data.porate * data.qty * (data.measure?data.measure:1) | number:2 ) || "0.00"}}</td>
+														</tr>
+														<tr>
+															<td>
+																<button class="btn btn-primary" ng-click="AddNewRowPOEdit()">Add Row</button>
+															</td>
+															<td style="white-space:nowrap">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i>CGST</i>
+															</span>
+															<div class="form-line">
+															 <input type="number" class="form-control" ng-model="PurchaseDetails[0].cgst" placeholder="CGST" ng-blur="calculatGST(PurchaseDetails[0])"></div></div>	
+															</td>
+															<td  style="white-space:nowrap">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i>SGST</i>
+															</span>
+															<div class="form-line">
+															<input type="number" class="form-control" ng-model="PurchaseDetails[0].sgst" placeholder="SGST" ng-blur="calculatGST(PurchaseDetails[0])">	</div></div>
+															</td>
+															<td  style="white-space:nowrap">
+															<div class="input-group">
+															<span class="input-group-addon">
+																<i>IGST</i>
+															</span>
+															<div class="form-line">
+															<input type="number" class="form-control" ng-model="PurchaseDetails[0].igst" placeholder="SGST" ng-blur="calculatGST(PurchaseDetails[0])">	</div>	</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-success" ng-click="UpdatePurchaseOrder()">Submit</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">New Purchase Order</h4>
+						</div>
+							<div class="modal-body">
+								  <form name="Addpo">
+								  <div class="row">
+								  <div class="col-md-4 ">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>Vendor:</i>
+											</span>
+											<div class="form-line">
+												<select  class="form-control" ng-model="vendor"  ng-options="obj.id as obj.name for obj in VendorListing" required></select>
+											</div>
+										</div>
+										</div>
+										
+										<div class="col-md-8 ">
+										<div class="input-group">
+											<div class="row">
+											<div class="col-md-4">
+											<span class="input-group-addon">
+												<i>Gross Amount: &nbsp;{{grossamount| number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4">
+											<span class="input-group-addon">
+												<i>Tax Amount: &nbsp; {{taxamount| number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4">
+											<span class="input-group-addon">
+												<i>Net Amount: &nbsp;{{netamount| number:2}}</i>
+											</span>
+										</div>
+										</div>
+										</div>
+										</div>
+										</div>
+										<div class="input-group"><button class="btn btn-primary" ng-click="prdlist = true;seletecdprdtable = false;">Select Products</button></div>
+										<div class="input-group">
+											<div class="row">
+											<div class="col-md-12" ng-show="prdlist">
+											
+											<div class="col-md-12">
+											<div class="col-md-6">
+							<div class="input-group">
+                                        <div class="form-line">
+                                            <input type="search" ng-model="searchprd.prdname" class="form-control" placeholder="Serach product">
+                                        </div>
+                                        <span class="input-group-addon">
+                                            <i ng-if="searchprd.prdname" class="fa fa-times-circle" id="input_img1" ng-click="searchprd.prdname = ''" class="fa fa-times-circle"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                </div>
+				<br>
+				
+				<hr>
+											
+											<div class="row">
+									<ul ng-repeat="data in ItemsListing | filter:searchprd.prdname" style="list-style-type:none;">
+										<li class="col-md-3"><input type="checkbox" id="checkbox{{data.id}}"  ng-change="sync(bool,data)" ng-model="bool" ng-checked="isChecked(data)"> <label for="checkbox{{data.id}}">{{data.name}}</label>
+										</li>
+									</ul>
+							</div>
+							<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-click="prdlist = false; seletecdprdtable = true;">Done</button>
+											</div>
+										</div>
+											</div>
+											
+											<div class="col-md-12" ng-show="seletecdprdtable">
+											<div class="table-responive">
+											<table class="table table-borderd" >
+											<thead>
+											<th>Product</th>
+											<th>PO.Rate</th>
+											<th>Qty.</th>
+											<th>Measurement (meters)</th>
+											<th>amount</th>
+											</thead>
+											<tbody>
+											<tr ng-repeat="data in SelectedProducts">
+											<td>{{data.name}}</td>
+											<td><input type="text" ng-model="data.porate" class="form-control" style="border: .5px solid black;width:50%;"/></td>
+											<td><input type="text" ng-model="data.qty" class="form-control" style="border: .5px solid black;width:50%;" ng-blur="setfinalamounts1($index)"/> &nbsp; {{data.productstype}}</td>
+											
+											<td><div ng-if="data.productstype == 'Qty.-Meters'" class="col-md-12"><input type="text" ng-model="data.measure" class="form-control" style="border: .5px solid" ng-blur="setfinalamounts1($index)"/></div></td>
+											<td class="text-right">{{data.amount | number:2}}</td>
+											</tr>
+											</tbody>
+											</table>
+											</div>
+											<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Addpo.$invalid" ng-click="AddNewPO()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+											</div>
+											</div>
+										</div>	
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="modal fade" id="myModalEdit" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Update Purchase Order</h4>
+						</div>
+							<div class="modal-body" >
+								  <form name="Editpo">
+								   <div class="row">
+								  <div class="col-md-4 ">
+								  
+								  
+								 
+										<div class="input-group" ng-repeat="data in poDetails | limitTo:1">
+											<span class="input-group-addon">
+												<i>Vendor:</i>
+											</span>
+											<div class="form-line" ng-init="VendorList()">
+												<select ng-model="data.vendor" class="form-control"  ng-options="obj.id as obj.name for obj in VendorListing" required></select>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-8">
+										<div class="input-group">
+											<div class="row">
+											<div class="col-md-4">
+											<span class="input-group-addon">
+												<i>Gross Amount: &nbsp;{{poDetails[0].grossamount| number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4">
+											<span class="input-group-addon">
+												<i>Tax: &nbsp; {{poDetails[0].taxamount| number:2}}</i>
+											</span>
+										</div>
+										<div class="col-md-4">
+											<span class="input-group-addon">
+												<i>Net Amount: &nbsp;{{poDetails[0].netamount| number:2}}</i>
+											</span>
+										</div>
+										</div>
+										</div>
+										</div>
+										</div>
+										<div class="input-group"><button class="btn btn-primary" ng-click="prdlist = true;seletecdprdtableedit = false;ListProducts();">Select Products</button></div>
+										<div class="input-group">
+											<div class="row">
+											<div class="col-md-12" ng-show="prdlist">
+											<div class="col-md-12">
+											<div class="col-md-6">
+							<div class="input-group">
+                                        <div class="form-line">
+                                            <input type="search" ng-model="searchprd.prdname" class="form-control" placeholder="Serach product">
+                                        </div>
+                                        <span class="input-group-addon">
+                                            <i ng-if="searchprd.prdname" class="fa fa-times-circle" id="input_img1" ng-click="searchprd.prdname = ''" class="fa fa-times-circle"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                </div>
+											
+											
+											
+											
+											<div class="row" >
+									<ul ng-repeat="data in ItemsListing | filter:searchprd.prdname" style="list-style-type:none;">
+										<li class="col-md-3"><input type="checkbox" id="{{data.id}}" name="cn"  ng-change="syncedit(bool,data)" ng-model="bool" ng-checked="isCheckededit(data)"> <label for="{{data.id}}">{{data.name}}</label>
+										</li>
+									</ul>
+							</div>
+							<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-click="prdlist = false; seletecdprdtableedit = true;">Done</button>
+											</div>
+										</div>
+											</div>
+											
+											<div class="col-md-12" ng-show="seletecdprdtableedit">
+											<div class="table-responive">
+											<table class="table table-borderd" >
+											<thead>
+											<th>Product</th>
+											<th>Pur.Rate</th>
+											<th>Qty.</th>
+											<th>Measure (Meters)</th>
+											<th>amount</th>
+											</thead>
+											<tbody ng-init="">
+											<tr ng-repeat="data in poDetails">
+											<td>{{data.name}}</td>
+											<td><input type="text" ng-model="data.porate" class="form-control" style="border: .5px solid black;width:50%;"/></td>
+											<td><input type="text" ng-model="data.qty" class="form-control" style="border: .5px solid black;width:50%;" ng-blur="setfinalamounts1edit($index)"/> &nbsp; {{data.productstype}}</td>
+											
+											<td><div ng-if="data.productstype == 'Qty.-Meters'" class="col-md-12"><input type="text" ng-model="data.measure" class="form-control" style="border: .5px solid" ng-blur="setfinalamounts1edit($index)"/></div></td>
+											<td class="text-right">{{data.netvalue | number:2}}</td>
+											</tr>
+											</tbody>
+											</table>
+											</div>
+											<div class="input-group">
+											<div class="">
+												<button class="btn btn-success pull-right" ng-disabled="Editpo.$invalid" ng-click="Editpurchase()" data-dismiss="modal">Save</button>
+											</div>
+										</div>
+											</div>
+											</div>
+										</div>	
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= poList.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>					
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<!-- <th class="text-center">Purchase Date</th> -->
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'createddate'; sortReverse = !sortReverse"> <b>Purchase Date</b> <span ng-show="sortType= 'createddate' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'createddate' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">PO ID</th>
+							<th class="text-center">Vendor</th>
+							<th class="text-center">Total Products</th>
+							<th class="text-center">Basic Amount</th>
+							<th class="text-center">Tax Amount</th>
+							<th class="text-center">Net Amount</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="ListPurchases()">
+							<tr ng-repeat="data in poList | filter:search.po | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+								<td class="text-center">{{data.createddate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-center">{{data.id}}</td>
+								<td class="text-center">{{data.vendorname}}</td>
+								<td class="text-center">{{data.totalskus}}</td>
+								<td class="text-right">{{data.grossamount | number:2}}</td>
+								<td class="text-right">{{data.taxamount | number:2}}</td>
+								<td class="text-right">{{data.netamount | number:2}}</td>
+								<td class="text-center"><a class="btn btn-warning" ng-click="GetPurchaseId(data.id)" data-toggle="modal" data-target="#myModalPOEdit">Edit</a> | <a class="btn btn-danger" ng-click="Deletepo(data.id)">Delete</a></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="plugins/raphael/raphael.min.js"></script>
+    <script src="plugins/morrisjs/morris.js"></script>
+
+    <!-- ChartJs -->
+    <script src="plugins/chartjs/Chart.bundle.js"></script>
+
+    <!-- Flot Charts Plugin Js -->
+    <script src="plugins/flot-charts/jquery.flot.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.resize.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.pie.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.categories.js"></script>
+    <script src="plugins/flot-charts/jquery.flot.time.js"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="plugins/jquery-sparkline/jquery.sparkline.js"></script>
+
+    
+</body>
+
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	 <!-- Anguler Js -->
+	
+	   <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+    <script src="angulerjs/appEntity.js"></script>
+	<script type="text/javascript">
+        function blockSpecialChar(e) {
+                        var k = e.keyCode;
+                         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 44  || k==47 || k==32 || (k >= 48 && k <= 57));
+													}
+		function number(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57));
+        }
+		function date(e) {
+            var k = e.keyCode;
+            return ((k >= 48 && k <= 57) || k==47);
+        }
+		
+    </script>	
+</head>
+
+<body class="theme-red" ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+	<section ng-app="appEntity" ng-controller="entityController">
+      <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" id="YourElementId" ng-app="appEntity" ng-controller="entityController">
+        <div class="container-fluid" ng-init="ListRegion();ListArea()">
+            <div class="block-header">
+                <h2><b>Leave Management</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+				<div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><button class="btn btn-primary" data-toggle="modal" data-target="#myModalAdd">Add New</button></div><div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.customer" placeholder="search"/>
+				<div ng-if="search.customer" class="fa fa-times-circle" id="input_img" ng-click="search.customer = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+				
+				
+				<div class="modal fade" id="myModalAdd" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Add Leave</h4>
+						</div>
+							<div class="modal-body">
+								<form>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>From Date:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="leaves.fromdate"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i>To Date:</i>
+											</span>
+											<div class="form-line">
+												<input type="date" class="form-control" ng-model="leaves.todate"/>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+								<div class="col-md-12">
+									<h6>Reasons</h6>
+								</div>
+								<div class="col-md-12">
+										<div class="demo-radio-button">
+											<input name="group4" type="radio" id="radio_7" class="radio-col-red" ng-click="leaves.reason ='Religious Leave'" checked />
+											<label for="radio_7">Religious Leave </label>
+											<br>
+											<input name="group4" type="radio" id="radio_8" ng-click="leaves.reason = 'Sick Leave'" class="radio-col-red"/>
+											<label for="radio_8">Sick Leave</label><br>
+											<input name="group4" type="radio" id="radio_9" ng-click="leaves.reason = 'Causal Leave'" class="radio-col-red" />
+											<label for="radio_9">Causal Leave</label><br>
+											
+											<input name="group4" type="radio" id="halfday" ng-click="leaves.reason = 'Half Day'" class="radio-col-red" />
+											<label for="halfday">Half Day</label><br>
+											<input name="group4" type="radio" id="radio_10" ng-click="leaves.reason = 'Other';reson = true" class="radio-col-red" />
+											<label for="radio_10">Other</label>
+										</div>
+										<div class="col-md-12" ng-show="reson">
+											<textarea class="form-control" ng-model="leaves.otherreason" placeholder="Reason"></textarea>
+										</div>
+								</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<div class="col-md-12">
+								<br>
+									<button class="btn btn-success" ng-click="SubmitLeave()">Submit</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+
+
+					
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPageenquiry()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= LeavesListing.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div>	
+				
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<th><center><input type="checkbox" id="allselecdt" ng-change="syncfordeleteLeaves(bool,LeavesListing)" ng-model="bool" ng-checked="isCheckeddeleteLeaves(LeavesListing)"> <label for="allselecdt">Select All</label></center></th>
+							<th class="text-center"> <a href='#' style='text-decoration:none;color:Black' ng-click="sortType = 'entityname'; sortReverse = !sortReverse"> <b>Username</b> <span ng-show="sortType= 'entityname' && !sortReverse" style='font-size:10px;' class='fa fa-chevron-down'></span> <span ng-show="sortType = 'entityname' && sortReverse" style='font-size:10px' class='fa fa-chevron-up'></span> </a></th>
+							<th class="text-center">From Date</th>
+							<th class="text-center">To date</th>
+							<th class="text-center">Reason</th>
+							<th class="text-center" ng-if="userlevel != 'HO'" >Remark</th>
+							<th class="text-center">Action</th>
+						</thead>
+						<tbody ng-init="LeavesList()">
+							<tr ng-repeat="data in LeavesListing | filter:search.customer | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse">
+							<td class="text-center"><input type="checkbox" id="cust{{$index}}" ng-change="syncfordeleteLeaves(bool,data)" ng-model="bool" ng-checked="isCheckeddeleteLeaves(data)"> <label for="cust{{$index}}"></label></td>
+								<td class="text-left">{{data.username}}</td>
+								<td class="text-left">{{data.fromdate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-left">{{data.todate | date:'dd/MM/yyyy'}}</td>
+								<td class="text-left">{{data.reason}}</td>
+								<td class="text-left" ng-if="userlevel != 'HO'">{{data.remark_review}}</td>
+								<td class="text-center"><span ng-if="data.approval == '1' && userlevel == 'HO'"><a  class="btn btn-warning" ng-click="ApproveLeave(data.id,0)">Approve</a>  <a class="btn btn-primary" ng-click="ApproveLeave(data.id,2)">Reject</a></span> <a ng-if="data.approval == '0'" class="btn btn-success" disabled>Approved</a><a ng-if="data.approval == '2'" class="btn btn-primary" disabled>Rejected</a> | <a class="btn btn-danger" ng-click="DeleteLeave(data.id)">Delete</a></td> 
+							</tr>
+							<tr ng-if="LeavesApplications.length > 0"><td><button class="btn btn-danger" ng-click="DeleteSelectedApproval()">Delete</button></td></tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+        </div>
+		<div id="sound"></div>
+    </section>	
+    <!-- Bootstrap Core Js -->
+    <script src="angulerjs/bootstrap.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    
+</body>
+
+</html>
