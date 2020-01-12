@@ -1,6 +1,7 @@
 var connection = require('../connection');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
+var moment = require('moment');
 
 function master() {
 	

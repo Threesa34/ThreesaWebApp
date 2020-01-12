@@ -174,6 +174,156 @@ Locationapp.config(['$httpProvider', function($httpProvider) {
 		  
       };
  */
+
+
+ /**
+ * Moves the map to display over Berlin
+ *
+ * @param  {H.Map} map      A HERE Map instance within the application
+ */
+function moveMapToBerlin(map){
+    map.setCenter({lat:19.0760, lng:72.8777});
+    map.setZoom(14);
+  }
+  
+  /**
+   * Boilerplate map initialization code starts below:
+   */
+  
+  //Step 1: initialize communication with the platform
+  // In your own code, replace variable window.apikey with your own apikey
+  var platform = new H.service.Platform({
+    apikey: "9hTOdeAw0F2AfaLWOxPncs2kfsXJ2hiR623ZvJXcvpI"
+  });
+  var defaultLayers = platform.createDefaultLayers();
+  
+  // Create the parameters for the routing request:
+
+  
+
+  var routingParameters = {
+    // The routing mode:
+    'mode': 'fastest;car',
+    // The start point of the route:
+    'waypoint0': 'geo!50.1120423728813,8.68340740740811',
+    // The end point of the route:
+    'waypoint1': 'geo!52.5309916298853,13.3846220493377',
+    // To retrieve the shape of the route we choose the route
+    // representation mode 'display'
+    'representation': 'display'
+  };
+  
+  //Step 2: initialize a map - this map is centered over Europe
+  var map = new H.Map(document.getElementById('map'),
+    defaultLayers.vector.normal.map,{
+    center: {lat:19.0760, lng:72.8777},
+    zoom: 14,
+    pixelRatio: window.devicePixelRatio || 1
+  });
+  // add a resize listener to make sure that the map occupies the whole container
+  window.addEventListener('resize', () => map.getViewPort().resize());
+  
+  //Step 3: make the map interactive
+  // MapEvents enables the event system
+  // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+  var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  
+  // Create the default UI components
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  
+  
+  // Define a callback function to process the routing response:
+  var onResult = function(result) {
+    var route,
+      routeShape,
+      startPoint,
+      endPoint,
+      linestring;
+    if(result.response.route) {
+    // Pick the first route from the response:
+    route = result.response.route[0];
+    // Pick the route's shape:
+    routeShape = route.shape;
+  
+    // Create a linestring to use as a point source for the route line
+    linestring = new H.geo.LineString();
+  
+    // Push all the points in the shape into the linestring:
+    routeShape.forEach(function(point) {
+      var parts = point.split(',');
+      linestring.pushLatLngAlt(parts[0], parts[1]);
+    });
+  
+    // Retrieve the mapped positions of the requested waypoints:
+    startPoint = route.waypoint[0].mappedPosition;
+    endPoint = route.waypoint[1].mappedPosition;
+  
+    // Create a polyline to display the route:
+    var routeLine = new H.map.Polyline(linestring, {
+      style: { strokeColor: 'blue', lineWidth: 3 }
+    });
+  
+    // Create a marker for the start point:
+    var startMarker = new H.map.Marker({
+      lat: startPoint.latitude,
+      lng: startPoint.longitude
+    });
+  
+    // Create a marker for the end point:
+    var endMarker = new H.map.Marker({
+      lat: endPoint.latitude,
+      lng: endPoint.longitude
+    });
+  
+    // Add the route polyline and the two markers to the map:
+    map.addObjects([routeLine, startMarker, endMarker]);
+  
+    // Set the map's viewport to make the whole route visible:
+    map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
+    }
+  };
+  
+  // Get an instance of the routing service:
+  var router = platform.getRoutingService();
+
+
+  $scope.getUserTracking = function (selecteduserid,trackdate) {
+	if(trackdate == undefined)
+	{trackdate = new Date();}
+
+var dd = trackdate.getDate();
+if(dd < 10)
+  dd = "0"+dd;
+var mm = trackdate.getMonth()+1;
+if(mm < 10)
+  mm = "0"+mm;
+var yy = trackdate.getFullYear();
+modifiedtrackdate = yy+"-"+mm+"-"+dd;
+
+$http({
+  method: 'GET'
+  , url: 'api/getUserTracking/'+selecteduserid+'/'+modifiedtrackdate
+  , dataType: 'jsonp'
+}).then(function (response) {
+console.log(response.data)
+var locationPoints = response.data;
+
+console.log(locationPoints);
+locationPoints.map(function(value)
+    {   
+		if(value.waypoint0 != null && value.waypoint1 != null)
+		{
+        	router.calculateRoute(value, onResult,
+            function(error) {
+       //       alert(error.message);
+			});
+		}
+    })
+
+});
+  }
+
+
 	  $scope.getOrderTrack = function (selecteduserid,trackdate) {
 				if(trackdate == undefined)
 				{trackdate = new Date();}

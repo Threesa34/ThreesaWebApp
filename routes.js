@@ -721,7 +721,11 @@ module.exports = {
 		
 		app.get('/api/TrackCurentPossitionWithUser/:userid/:trackdate', function(req, res) { 
 		products.TrackCurentPossitionWithUser(req.params.userid,req.params.trackdate,res);
-		});		
+		});
+		
+		app.get('/api/getUserTracking/:userid/:trackdate', function(req, res) { 
+			products.getUserTracking(req.params.userid,req.params.trackdate,res);
+			});
 		
 		app.get('/api/updateLogoutstatus/:userid', function(req, res) { 
 		products.updateLogoutstatus(req.params.userid,res);

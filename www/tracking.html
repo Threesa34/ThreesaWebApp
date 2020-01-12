@@ -29,7 +29,14 @@
     <script src="js/jquery.min.js"></script>
 	 <!-- Anguler Js -->
     <script src="angulerjs/angular.min.js"></script>
-    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+	<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+
     <script src="angulerjs/appLocation.js"></script>
 
 	
@@ -102,7 +109,7 @@
 		</div>
 		<!-- ng-change="getOrderTrack(Selecteduserid,trackdate)" -->
 		<div class="col-md-2">
-			<button class="btn btn-primary" id="track">Track</button>
+			<button class="btn btn-primary" ng-click="getUserTracking(Selecteduserid, trackdate)" id="track_user">Track</button>
 		</div>
 		<!-- <div class="col-md-1 text-right">
 			<a href="#" id="refreshMap"title="Refresh Map"><h2><i class="material-icons">refresh</i></h2></a>

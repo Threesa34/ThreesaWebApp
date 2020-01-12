@@ -2,6 +2,7 @@ var connection = require('../connection');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
+var moment = require('moment');
 
 function products() {
 
@@ -1050,6 +1051,34 @@ function products() {
 					res.send(result);
 				}
 			});
+		});
+	};
+
+
+
+	this.getUserTracking = function (userid, trackdate, res) {
+		connection.acquire(function (err, con) {
+			console.log('----------------- here')
+			if (userid === "null") {
+				var sql = "SELECT 'fastest;car' AS mode,(CONCAT('geo!',(SELECT d.lat FROM lastlocation AS d WHERE d.id = (SELECT MAX(a.id) FROM lastlocation as a WHERE a.id = (SELECT m.id FROM lastlocation AS m WHERE m.id < lastlocation.id ORDER BY m.id DESC LIMIT 1) LIMIT 1)),',',(SELECT e.lan FROM lastlocation AS e WHERE e.id = (SELECT MAX(a.id) FROM lastlocation as a WHERE a.id = (SELECT m.id FROM lastlocation AS m WHERE m.id < lastlocation.id ORDER BY m.id DESC LIMIT 1) LIMIT 1)))) AS waypoint0,(CONCAT('geo!',(SELECT c.lat FROM lastlocation AS c WHERE c.id = lastlocation.id LIMIT 1),',',(SELECT b.lan FROM lastlocation as b WHERE b.id = lastlocation.id LIMIT 1))) AS waypoint1 , 'display' AS representation  FROM `lastlocation` WHERE  DATE_FORMAT(lastlocation.timing,'%Y-%m-%d') = '"+trackdate+"'"
+			}
+			if (userid != "null") {
+				var selecteduser = userid.replace("number:", '');
+
+				var sql = "SELECT 'fastest;car' AS mode,(CONCAT('geo!',(SELECT d.lat FROM lastlocation AS d WHERE d.id = (SELECT MAX(a.id) FROM lastlocation as a WHERE a.id = (SELECT m.id FROM lastlocation AS m WHERE m.id < lastlocation.id ORDER BY m.id DESC LIMIT 1) LIMIT 1)),',',(SELECT e.lan FROM lastlocation AS e WHERE e.id = (SELECT MAX(a.id) FROM lastlocation as a WHERE a.id = (SELECT m.id FROM lastlocation AS m WHERE m.id < lastlocation.id ORDER BY m.id DESC LIMIT 1) LIMIT 1)))) AS waypoint0,(CONCAT('geo!',(SELECT c.lat FROM lastlocation AS c WHERE c.id = lastlocation.id LIMIT 1),',',(SELECT b.lan FROM lastlocation as b WHERE b.id = lastlocation.id LIMIT 1))) AS waypoint1 , 'display' AS representation  FROM `lastlocation` WHERE `userid` = "+selecteduser+" AND DATE_FORMAT(lastlocation.timing,'%Y-%m-%d') = '"+trackdate+"'"
+			}
+			con.query(sql, function (err, result) {
+				console.log(err);
+				if (err) {
+					res.send({
+						status: 1,
+						message: "Something went wrong."
+					});
+				} else {
+					res.send(result);
+				}
+			});
+			con.release();
 		});
 	};
 

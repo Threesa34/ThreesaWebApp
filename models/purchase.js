@@ -2,6 +2,7 @@ var connection = require('../connection');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 var puretext = require('puretext');
+var moment = require('moment');
 function purchase() {
 	
 	/* PURCHASE */

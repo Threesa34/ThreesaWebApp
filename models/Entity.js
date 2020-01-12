@@ -1,6 +1,7 @@
 var connection = require('../connection');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
+var moment = require('moment');
 var smtpConfig = {
     host: 'smtp.rediffmailpro.com'
     , port: 587
@@ -238,7 +239,7 @@ function entity() {
 			delete enquirydetails[0].approvalstm;
 			if(enquirydetails[0].username != null)
 			{
-									enquirydetails[0].connectiondate = new Date();
+									enquirydetails[0].connectiondate = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 									enquirydetails[0].conectionstats = 1;
 					con.query('update enquiry set ? where id = ?',[enquirydetails[0],enquirydetails[0].id], function (err, result) {
 					console.log(err);
@@ -337,7 +338,7 @@ function entity() {
 						if(customers.username)
 						{
 							customers.conectionstats = 1;
-							customers.connectiondate = new Date();
+							customers.connectiondate = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 						}
 						else
 						{
@@ -811,7 +812,7 @@ this.AddNewComplaints= function (complaints, res) {
 			console.log(details);
 		if(details[0].id)	
 		{
-			var sql = 'UPDATE `advancepayment` SET `userid`= '+details[0].userid+',`paymentmonth`= "'+details[0].paymentmonth+'",`amt`= '+details[0].amt+',`cut_amt`= '+details[0].cut_amt+' WHERE `id`= '+details[0].id;
+			var sql = 'UPDATE `advancepayment` SET `userid`= '+details[0].userid+',`paymentmonth`= "'+moment(details[0].paymentmonth).format("YYYY-MM-DD HH:mm:ss")+'",`amt`= '+details[0].amt+',`cut_amt`= '+details[0].cut_amt+' WHERE `id`= '+details[0].id;
 		}
 		else
 		{
@@ -819,7 +820,7 @@ this.AddNewComplaints= function (complaints, res) {
 			{
 				details[0].cut_amt = '0';
 			}
-			var sql ='INSERT INTO `advancepayment`(`userid`, `paymentmonth`, `amt`,`cut_amt`, `createdby`) VALUES ('+details[0].userid+',"'+details[0].paymentmonth+'",'+details[0].amt+','+details[0].cut_amt+','+details[0].createdby+')';
+			var sql ='INSERT INTO `advancepayment`(`userid`, `paymentmonth`, `amt`,`cut_amt`, `createdby`) VALUES ('+details[0].userid+',"'+moment(details[0].paymentmonth).format("YYYY-MM-DD HH:mm:ss")+'",'+details[0].amt+','+details[0].cut_amt+','+details[0].createdby+')';
 		}
 		connection.acquire(function(err, con) {
 			
@@ -842,11 +843,11 @@ this.AddNewComplaints= function (complaints, res) {
 	{ 			
 		if(details[0].id)	
 		{
-			var sql = 'UPDATE `loan` SET `userid`= '+details[0].userid+',`loanamt`='+details[0].loanamt+',`installments`='+details[0].installments+',`monthlyamt`='+details[0].monthlyamt+',`instmonth`= "'+details[0].instmonth+'" WHERE `id` = '+details[0].id;
+			var sql = 'UPDATE `loan` SET `userid`= '+details[0].userid+',`loanamt`='+details[0].loanamt+',`installments`='+details[0].installments+',`monthlyamt`='+details[0].monthlyamt+',`instmonth`= "'+moment(details[0].instmonth).format("YYYY-MM-DD HH:mm:ss")+'" WHERE `id` = '+details[0].id;
 		}
 		else
 		{
-			var sql ='INSERT INTO `loan`(`userid`, `loanamt`, `installments`, `monthlyamt`, `instmonth`, `createdby`) VALUES ('+details[0].userid+',"'+details[0].loanamt+'",'+details[0].installments+','+details[0].monthlyamt+',"'+details[0].instmonth+'",'+details[0].createdby+')';
+			var sql ='INSERT INTO `loan`(`userid`, `loanamt`, `installments`, `monthlyamt`, `instmonth`, `createdby`) VALUES ('+details[0].userid+',"'+details[0].loanamt+'",'+details[0].installments+','+details[0].monthlyamt+',"'+moment(details[0].instmonth).format("YYYY-MM-DD HH:mm:ss")+'",'+details[0].createdby+')';
 		}
 		connection.acquire(function(err, con) {
 			
@@ -1067,11 +1068,11 @@ console.log(userlevel+"-------")
 	console.log(details);
 		if(details[0].id)	
 		{
-			var sql = 'UPDATE `vendorpayment` SET `vendor`= "'+details[0].vendor+'",`paymentdate`="'+details[0].paymentdate+'",`amount`='+details[0].amount+' WHERE `id` = '+details[0].id;
+			var sql = 'UPDATE `vendorpayment` SET `vendor`= "'+details[0].vendor+'",`paymentdate`="'+moment(details[0].paymentdate).format("YYYY-MM-DD HH:mm:ss")+'",`amount`='+details[0].amount+' WHERE `id` = '+details[0].id;
 		}
 		else
 		{
-			var sql ='INSERT INTO `vendorpayment`(`vendor`, `amount`, `paymentdate`, `createdby`) VALUES ("'+details[0].vendor+'",'+details[0].amount+',"'+details[0].paymentdate+'",'+details[0].createdby+')';
+			var sql ='INSERT INTO `vendorpayment`(`vendor`, `amount`, `paymentdate`, `createdby`) VALUES ("'+details[0].vendor+'",'+details[0].amount+',"'+moment(details[0].paymentdate).format("YYYY-MM-DD HH:mm:ss")+'",'+details[0].createdby+')';
 		}
 		connection.acquire(function(err, con) {
 			

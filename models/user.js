@@ -2,6 +2,7 @@ var connection = require('../connection');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 const https = require('https');
+var moment = require('moment');
 var smtpConfig = {
     host: 'smtp.rediffmailpro.com'
     , port: 587,

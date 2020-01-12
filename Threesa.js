@@ -8,7 +8,8 @@ var routes = require('./routes');
 var multer = require('multer');
 var cors = require('cors');
 	
-	
+var moment = require('moment');
+
 	
 const gcm = require('node-gcm');
 	const gcmKey = 'AIzaSyDsGTZrkH1GGadrgxG4aJsnDXJkpEHrUNY'; // Your gcm key in quotes
@@ -77,6 +78,13 @@ app.post('/AddEmployee', upload.single('photo'), function (req, res, next) {
         }
     }
     connection.acquire(function (err, con) {
+		if(req.body.dob)
+		req.body.dob = moment(req.body.dob).format("YYYY-MM-DD HH:mm:ss");
+
+		if(req.body.joindate)
+		req.body.joindate = moment(req.body.joindate).format("YYYY-MM-DD HH:mm:ss");
+
+
         var sql = 'INSERT INTO `employeemaster`(`name`, `address`, `mobile1`, `mobile2`, `email`, `salary`, `joindate`, `dob`, `photo`, `createdby`) VALUES("'+req.body.name+'","'+req.body.address+'",'+req.body.mobile1+','+req.body.mobile2+',"'+req.body.email+'",'+req.body.salary+',"'+req.body.joindate+'","'+req.body.dob+'","'+myfilename+'",'+req.body.userid+')';
         con.query(sql, function (err, result){
 		
@@ -119,7 +127,14 @@ app.post('/UpdateEmployee', upload.single('photo'), function (req, res, next) {
             var myfilename = req.file.filename;
         } else {
             var myfilename = req.body.photo;
-        }
+		}
+		
+		if(req.body.dob)
+		req.body.dob = moment(req.body.dob).format("YYYY-MM-DD HH:mm:ss");
+
+		if(req.body.joindate)
+		req.body.joindate = moment(req.body.joindate).format("YYYY-MM-DD HH:mm:ss");
+
 		var sql1 = 'UPDATE `employeemaster` SET `name`="'+req.body.name+'",`address`="'+req.body.address+'",`mobile1`='+req.body.mobile1+',`mobile2`='+req.body.mobile2+',`email`="'+req.body.email+'",`salary`='+req.body.salary+',`joindate`="'+req.body.joindate+'",`dob`="'+req.body.dob+'",`photo`="'+myfilename+'" WHERE id ='+req.body.id;
 		 con.query(sql1, function (err, result) {
 			 console.log(sql1);
@@ -657,6 +672,25 @@ io1.sockets.on( 'connection', function( client ) {
 
 
 
+var cron = require('node-cron');
+ 
+cron.schedule('* 59 23 */1 * */1', () => {
+  console.log('running a task every two minutes');
+
+  var formatedaddress = 'System generated';
+
+   connection.acquire(function (err, con) {
+	con.query('UPDATE userattendance set `outaddress` = "'+formatedaddress+'", outtime = now(),`status` = 0 where DATE_FORMAT(attdate,"%Y-%m-%d") = CURDATE() AND ISNULL(`outtime`)', function (err, result) {
+		con.release();
+		if (err) {
+			console.log(err)
+		} else {
+			console.log('done', result)
+		}
+	});
+}); 
+
+});
 
 
 server.timeout = 1000;
