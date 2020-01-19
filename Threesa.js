@@ -79,13 +79,18 @@ app.post('/AddEmployee', upload.single('photo'), function (req, res, next) {
     }
     connection.acquire(function (err, con) {
 		if(req.body.dob)
-		req.body.dob = moment(req.body.dob).format("YYYY-MM-DD HH:mm:ss");
+		var dob = moment(req.body.dob).format("YYYY-MM-DD HH:mm:ss");
+		else
+		var dob = null;
 
 		if(req.body.joindate)
-		req.body.joindate = moment(req.body.joindate).format("YYYY-MM-DD HH:mm:ss");
+			var joindate = moment(req.body.joindate).format("YYYY-MM-DD HH:mm:ss");
+			else{
+				var joindate = null;
+			}
 
 
-        var sql = 'INSERT INTO `employeemaster`(`name`, `address`, `mobile1`, `mobile2`, `email`, `salary`, `joindate`, `dob`, `photo`, `createdby`) VALUES("'+req.body.name+'","'+req.body.address+'",'+req.body.mobile1+','+req.body.mobile2+',"'+req.body.email+'",'+req.body.salary+',"'+req.body.joindate+'","'+req.body.dob+'","'+myfilename+'",'+req.body.userid+')';
+        var sql = 'INSERT INTO `employeemaster`(`name`, `address`, `mobile1`, `mobile2`, `email`, `salary`, `joindate`, `dob`, `photo`, `createdby`) VALUES("'+req.body.name+'","'+req.body.address+'",'+req.body.mobile1+','+req.body.mobile2+',"'+req.body.email+'",'+req.body.salary+',"'+joindate+'","'+dob+'","'+myfilename+'",'+req.body.userid+')';
         con.query(sql, function (err, result){
 		
 			if (err) {
@@ -130,12 +135,19 @@ app.post('/UpdateEmployee', upload.single('photo'), function (req, res, next) {
 		}
 		
 		if(req.body.dob)
-		req.body.dob = moment(req.body.dob).format("YYYY-MM-DD HH:mm:ss");
+		var dob = moment(req.body.dob).format("YYYY-MM-DD HH:mm:ss");
+		else
+		var dob = "";
 
 		if(req.body.joindate)
-		req.body.joindate = moment(req.body.joindate).format("YYYY-MM-DD HH:mm:ss");
+		var joindate = moment(req.body.joindate).format("YYYY-MM-DD HH:mm:ss");
+		else
+		{
+		var joindate = "";
+		}
 
-		var sql1 = 'UPDATE `employeemaster` SET `name`="'+req.body.name+'",`address`="'+req.body.address+'",`mobile1`='+req.body.mobile1+',`mobile2`='+req.body.mobile2+',`email`="'+req.body.email+'",`salary`='+req.body.salary+',`joindate`="'+req.body.joindate+'",`dob`="'+req.body.dob+'",`photo`="'+myfilename+'" WHERE id ='+req.body.id;
+		var sql1 = 'UPDATE `employeemaster` SET `name`="'+req.body.name+'",`address`="'+req.body.address+'",`mobile1`='+req.body.mobile1+',`mobile2`='+req.body.mobile2+',`email`="'+req.body.email+'",`salary`='+req.body.salary+',`joindate`="'+joindate+'",`dob`="'+dob+'",`photo`="'+myfilename+'" WHERE id ='+req.body.id;
+
 		 con.query(sql1, function (err, result) {
 			 console.log(sql1);
 			 console.log(err);
@@ -147,6 +159,7 @@ app.post('/UpdateEmployee', upload.single('photo'), function (req, res, next) {
 					console.log(err);
 					if(err)
 					{
+					
 						con.release();
 					}
 					else
