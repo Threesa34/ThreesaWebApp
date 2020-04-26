@@ -173,10 +173,10 @@
 										<div class="col-md-6">
 										<div class="input-group">
 											<span class="input-group-addon">
-												<i>Installments:</i>
+												<i>Installment Amount:</i>
 											</span>
 											<div class="form-line">
-												<input type="text" class="form-control" ng-model="loan[0].installments" placeholder="Installments" maxlength="4" onkeypress="return number(event)" required >
+												<input type="text" class="form-control" ng-model="loan[0].monthlyamt" placeholder="Installment Amount" maxlength="4" onkeypress="return number(event)" required >
 											</div>
 										</div>
 										</div>
@@ -197,7 +197,7 @@
 										<div class="input-group">
 										<span class="input-group-addon">
 												<i>EMI:</i>
-											</span> <b>{{loan[0].monthlyamt = loan[0].loanamt / loan[0].installments | number:2}} /-</b>
+											</span> <b>{{loan[0].installments = loan[0].loanamt / loan[0].monthlyamt || 0}} (Months)</b>
 										</div>
 									</div>
 									</div>

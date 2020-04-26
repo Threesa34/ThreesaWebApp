@@ -95,26 +95,19 @@ app.post('/AddEmployee', upload.single('photo'), function (req, res, next) {
 		
 			if (err) {
             con.release();
-			
-            return res.end('Something Went Wrong ! plaes try Again');
+			console.log(err,"-----------------22222222")
+            res.send('Something Went Wrong ! plaes try Again');
             
         } else {
 			 if(req.body.username != ''&& req.body.password != '')
 			 {
 				 var str ='INSERT INTO `user`(`username`, `password`, `fullname`, `address`, `mobile1`, `mobile2`, `email`, `userlevel`, `supervisor`, `photo`,`empid`) VALUES ("'+req.body.username+'","'+req.body.password+'","'+req.body.name+'","'+req.body.address+'",'+req.body.mobile1+','+req.body.mobile2+',"'+req.body.email+'","'+req.body.userlevel+'",'+req.body.supervisor+',"'+myfilename+'",'+result.insertId+')'
 				 con.query(str, function (err, resultuser){
-					 if(err)
-					 {
-						 con.release();
-					 }
-				 else
-				 {
-					 con.release();
-				 }
+					 console.log(err,"-----------------11111")
 				 });
 			 }
-			 res.end('Employee Details Added Successfully');
-
+			 res.send('Employee Details Added Successfully');
+			 con.release();
         }
         })
         
@@ -149,28 +142,19 @@ app.post('/UpdateEmployee', upload.single('photo'), function (req, res, next) {
 		var sql1 = 'UPDATE `employeemaster` SET `name`="'+req.body.name+'",`address`="'+req.body.address+'",`mobile1`='+req.body.mobile1+',`mobile2`='+req.body.mobile2+',`email`="'+req.body.email+'",`salary`='+req.body.salary+',`joindate`="'+joindate+'",`dob`="'+dob+'",`photo`="'+myfilename+'" WHERE id ='+req.body.id;
 
 		 con.query(sql1, function (err, result) {
-			 console.log(sql1);
-			 console.log(err);
+			 console.log(err,"------------002");
 			 if(err)
 			 {con.release();}
 			else
 			{
 				con.query('UPDATE `user` SET `fullname`="'+req.body.name+'",`address`="'+req.body.address+'",`mobile1`='+req.body.mobile1+',`mobile2`='+req.body.mobile2+',`email`="'+req.body.email+'",`userlevel`="'+req.body.userlevel+'",`username`="'+req.body.username+'",`password`="'+req.body.password+'",`supervisor`='+req.body.supervisor+',`photo`="'+myfilename+'" WHERE empid ='+req.body.id, function (err, result) {
-					console.log(err);
-					if(err)
-					{
-					
-						con.release();
-					}
-					else
-					{
-						con.release();
-					}
+					console.log(err,"----------------001");
 				})
 			}
 		 })
         
-        res.end("Data Updated Successfully");
+		res.send("Data Updated Successfully");
+		con.release();
 		});
     }
 });

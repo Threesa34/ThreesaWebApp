@@ -15,7 +15,6 @@ function products() {
 
 	var message = new gcm.Message();
 
-
 	function SendNotification(notificationdata) {
 
 		message.addData({
@@ -35,7 +34,7 @@ function products() {
 		});
 	}
 
-
+   
 	this.GetStockStatement = function (fromdate, todate, res) {
 		connection.acquire(function (err, con) {
 			if (todate == "undefined") {

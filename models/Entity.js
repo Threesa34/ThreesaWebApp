@@ -2158,6 +2158,29 @@ this.AddNewCollection= function (collection, res) {
   };
   
   
+
+
+//   EMPLOYEE ATTENDANCE REPORT
+
+this.getEmployeeAttendanceReport = function(attfilter,res)
+  {
+	  connection.acquire(function(err, con) {
+		  con.query('SELECT `attdate`,`intime`,`outtime`,DATE_FORMAT(`attdate`,"%m-%Y") AS attmonth,(SELECT employeemaster.name FROM employeemaster WHERE employeemaster.id = (SELECT user.empid FROM user WHERE user.id = '+attfilter.selectedUser+' LIMIT 1)) AS employeename FROM `userattendance` WHERE userattendance.userid = '+attfilter.selectedUser+' AND DATE_FORMAT(`attdate`,"%m-%Y") = "'+attfilter.selectedMonth+'"',function(err, result){
+			  if(err)
+			  {
+				res.send({status:1,message:"No record found"}) 
+			  }
+				else
+				{
+					res.send(result) 
+				}
+			});
+			con.release();
+	  });
+  };
+
+//EMPLOYEE ATTENDANCE REPORT
+
   
 }
 module.exports = new entity();

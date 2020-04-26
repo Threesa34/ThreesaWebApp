@@ -2661,6 +2661,7 @@ var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','
 					})
 					.success(function(data) {
 						alert(data.message);
+						$scope.loan  = undefined;
 						$scope.ListLoan();
 					});
 			};	
@@ -3452,6 +3453,108 @@ threesattendanceapplication ---------------application id */
 		}
 		
 		
+
+		// ATTENDANCE REPORT
+
+
+		$scope.MonthsArr = [
+			{
+				monthno : '01',
+				monthname : 'January'
+			},
+			{
+				monthno : '02',
+				monthname : 'February'
+			},
+			{
+				monthno : '03',
+				monthname : 'March'
+			},
+			{
+				monthno : '04',
+				monthname : 'April'
+			},
+			{
+				monthno : '05',
+				monthname : 'May'
+			},
+			{
+				monthno : '06',
+				monthname : 'June'
+			},
+			{
+				monthno : '07',
+				monthname : 'July'
+			},
+			{
+				monthno : '08',
+				monthname : 'August'
+			},
+			{
+				monthno : '09',
+				monthname : 'Septembar'
+			},
+			{
+				monthno : '10',
+				monthname : 'October'
+			},
+			{
+				monthno : '11',
+				monthname : 'November'
+			},
+			{
+				monthno : '12',
+				monthname : 'December'
+			}
+		]
+
+		$scope.getEmployeeAttendanceReport = function(selectedMonth, selectedUser)
+		{
+			if(selectedMonth)
+			{
+				
+				var attMonth = selectedMonth+'-'+new Date().getFullYear();
+			}
+			else
+			{
+				var month = parseInt(new Date().getMonth()+1);
+				if(month < 10)
+				{
+					var mm = '0'+month;
+				}
+				else
+				{
+					var mm = month;
+				}
+				//month = parseInt(month);
+				var attMonth = mm+'-'+new Date().getFullYear();
+			}
+			if(selectedUser)
+			{
+				$http({
+					method  : 'POST',
+					url     : 'api/getEmployeeAttendanceReport/',
+					data    : {selectedUser: selectedUser, selectedMonth: attMonth},
+					headers : {'Content-Type': 'application/json'} 
+					})
+					.success(function(data) {
+						$scope.employeeAttendaceReportList = data;
+					});
+	
+			}
+			else
+			{
+				alert('Please select employee for get attendance report of selected user');
+			}
+
+			
+		}
+
+
+
+
+
+		//ARTTENDANCE REPORT
 		
 		
 		

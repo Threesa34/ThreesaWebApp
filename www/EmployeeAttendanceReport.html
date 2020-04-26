@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Threesa Infoway Pvt. Ltd.</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/Threesa_Logo.png" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	
+	 <!-- Jquery Core Js -->
+    <script src="js/jquery.min.js"></script>
+	
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+	  <script src="angulerjs/jszip.js"></script>
+	  <script src="angulerjs/xlsx.js"></script>
+	    <script src="angulerjs/socket.io.js"></script>
+    <script src="angulerjs/angular.min.js"></script>
+    <script src="angulerjs/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	  <script src="angulerjs/ng-file-upload.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-shim.min.js"></script>
+	  <script src="angulerjs/ng-file-upload-all.min.js"></script>
+    <script src="angulerjs/appEntity.js"></script>
+	
+</head>
+
+<body class="theme-red" id="YourElementId" ng-app="appEntity" ng-controller="MyCtrl as upload">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars   <select ng-model="selectedmonth" ng-options="obj.id as obj.monthname for obj in monthsarr" class="form-control" ng-change="getemployeesalary(selectedmonth)"><option value="" selected disabled>Select Month</option></select> -->
+	<section ng-app="appEntity" ng-controller="entityController as maycontroller">
+     <div ng-if="userlevel=='HO' || userlevel == 'ACCOUNT HEAD'" ng-include="'Mainmenu.html'"></div>
+      <div ng-if="userlevel=='STOCK  MANAGER'" ng-include="'mainmenuforatock.html'"></div>
+      <div ng-if="userlevel=='FIELD' || userlevel=='SUPERVISOR'|| userlevel=='SHOP MANAGEMENT'|| userlevel=='SALES EXICUTIVE' || userlevel == 'COLLECTION MAN'" ng-include="'mainmenuforfield.html'"></div>
+      <div ng-if="userlevel=='OFFICE'" ng-include="'mainmenuforoffice.html'"></div>
+    </section>
+
+    <section class="content" ng-app="appEntity" ng-controller="entityController as maycontroller">
+        <div class="container-fluid">
+            <div class="block-header" ng-init="ListUser()">
+                <h2><b>Attendace Report</b></h2>
+            </div>
+			<div class="row clearfix">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12"><br>
+                
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <select class="form-control" ng-model="selectedUser" ng-options="obj.id as obj.username for obj in userList" ng-change="getEmployeeAttendanceReport(selectedMonth, selectedUser)">
+                        <option value="" disabled selected>Select Employee</option>
+                        </select>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <select class="form-control" ng-model="selectedMonth"  ng-options="obj.monthno as obj.monthname for obj in MonthsArr" ng-change="getEmployeeAttendanceReport(selectedMonth, selectedUser)">
+                        <option value="" selected disabled>Select Month</option>
+                    </select>
+                    <!-- <input type="month" ng-model="selectedMonth" class="form-control" />-->
+                </div> 
+
+                <div class="col-lg-3 col-md-3 col-sm-8 col-xs-8 pull-right"><input type="search" class="form-control" ng-model="search.name" placeholder="search"/>
+				<div ng-if="search.name" class="fa fa-times-circle" id="input_img" ng-click="search.name = ''"></div>
+				</div>
+				<br>
+				<br>
+				</div>
+			<!-- 	
+				
+				
+				
+				<div class="col-md-3 col-xs-6" style="float:right">
+													  <button style='border:none;background:transparent;color:black;' ng-disabled='currentPage == 0' class='fa fa-chevron-left' ng-click='currentPage=currentPage-1'></button>
+													  <b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+													  <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+														<button style='border:none;background:transparent;color:black' class='fa fa-chevron-right' ng-disabled='currentPage >= employeesalarydetails.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+				</div> -->					
+                
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                    <strong>{{employeeAttendaceReportList[0].employeename}}</strong>
+                </div>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+				<div class="card">
+					<div class="table-responsive">
+					<br>
+						<table class="table table-bordered table-striped table-hover">
+						<thead>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>In time</th>
+                            <th>Out time</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in employeeAttendaceReportList | filter:search.name | orderBy:sortType:sortReverse">
+                                <td>{{$index +1}}</td>
+                                <td>{{data.attdate | date: 'dd/MM/yyyy'}}</td>
+                                <td>{{data.intime | date:'hh:mm:ss a'}}</td>
+                                <td>{{data.outtime | date:'hh:mm:ss a'}}</td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+			</div>
+            
+        </div>
+    </section>
+	
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+	
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+
+    
+</body>
+
+</html>

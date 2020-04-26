@@ -891,9 +891,16 @@ module.exports = {
 		
 		app.post('/api/UploadEmployee/', function (req, res) {
 			 Entity.UploadEmployee(req.body,res);
-        }); 
+		}); 
+		
+
+
+
 		/* salary */
 		
+		app.post('/api/getEmployeeAttendanceReport/', function (req, res) {
+			Entity.getEmployeeAttendanceReport(req.body,res);
+	   }); 
 		
 		app.get('/api/getemployeesalary/:month', function (req, res) {
 			 Entity.GetEmployeeSalary(req.params.month,res);
@@ -1352,9 +1359,9 @@ module.exports = {
 
  example: type - 
 
-
+      -
  -
-
+-
 
 
 */
